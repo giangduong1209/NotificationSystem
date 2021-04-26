@@ -14,6 +14,11 @@ app.get('/admin/create_account',(req,res) =>{
     res.render('register')
 })
 
+app.post('/admin/create_account', (req, res) =>{
+    
+})
+
+
 
 const port = process.env.PORT || 8080
 app.listen(8080, () =>{
