@@ -10,6 +10,10 @@ app.get('/admin', (req,res) =>{
     res.render('adminInterface')
 })
 
+app.get('/admin/create_account',(req,res) =>{
+    res.render('register')
+})
+
 
 const port = process.env.PORT || 8080
 app.listen(8080, () =>{
