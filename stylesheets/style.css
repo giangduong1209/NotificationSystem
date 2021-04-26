@@ -1,0 +1,80 @@
+*{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    text-decoration: none;
+}
+
+.sidebar{
+    position: fixed;
+    left: -250px;
+    width: 260px;
+    background-color: #33485C;
+    height: 950px;
+}
+
+.sidebar h3{
+    font-size: 22px;
+    color: white;
+    text-align: center;
+    line-height: 65px;
+    position: relative;
+
+}
+
+.sidebar ul a{
+    color: white;
+    line-height:  65px;
+    display: block;
+    padding-left: 20px;
+    box-sizing: border-box;
+    font-size: 15px;
+    border-top: 1px solid rgba(255, 255, 255, .1);
+    border-bottom: 1px solid black;
+    text-decoration: none;
+}
+
+ul li:hover a{
+    padding-left: 5px;
+}
+
+.boxright{
+    position: static;
+    text-align: right;
+    height: 50px;
+    background-color: slategray;
+
+}
+
+.dropdown span {
+    margin-right: 20px;
+    font-size: 20px;
+    margin-top: 10px;
+    color: white;
+}
+
+
+.dropdown a{
+    margin-right: 20px;
+    text-decoration: none;
+    font-size: 20px;
+}
+
+#check{
+    display: none;
+}
+
+label #btn, label #cancel{
+    position: absolute;
+    cursor: pointer;
+    background: black;
+    border-radius: 5px;
+}
+
+label #btn{
+    left: 40px;
+    top: 25px;
+    font-size: 35px;
+    color: white;
+    padding: 5px 10px;
+}
