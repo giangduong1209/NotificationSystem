@@ -55,14 +55,16 @@ const validator = [
 app.post('/admin/create_account', validator, (req, res) =>{
     let result = validationResult(req);
     if (result.errors.length === 0){
-        let {name, email, password, permission} = req.body
+        let {name, email, password, FAC} = req.body
+        var temp = ""
+        temp += FAC
         bcrypt.hash(password, 10)
         .then(hashed => {
             let user = new AccountFaculty({
                 name: name,
                 email: email,
                 password: hashed,
-                permission
+                permission: temp
             })
             return user.save()
         })
@@ -73,7 +75,10 @@ app.post('/admin/create_account', validator, (req, res) =>{
         message = result[fields].msg
         break;
     }
-    const {name, email, password} = req.body
+    const {name, email, password, FAC} = req.body
+    
+
+
     req.flash('error', message)
     req.flash('name', name)
     req.flash('email', email)
