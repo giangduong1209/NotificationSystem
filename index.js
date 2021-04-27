@@ -1,10 +1,13 @@
 const { urlencoded } = require('express')
 const express = require('express')
 const {check, validationResult} = require('express-validator')
+const bcrypt = require('bcrypt')
 const flash = require('express-flash')
 const session = require('express-session')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
+const AccountFaculty = require('./models/AccountFacultyModel')
+const mongoose = require('mongoose')
 const app = express()
 app.set('view engine','ejs')
 app.use(bodyParser.urlencoded({extended: false}))
@@ -52,30 +55,45 @@ const validator = [
 app.post('/admin/create_account', validator, (req, res) =>{
     let result = validationResult(req);
     if (result.errors.length === 0){
-        return res.send('Input Ok')
+        let {name, email, password, permission} = req.body
+        bcrypt.hash(password, 10)
+        .then(hashed => {
+            let user = new AccountFaculty({
+                name: name,
+                email: email,
+                password: hashed,
+                permission
+            })
+            return user.save()
+        })
     }
-    
     result = result.mapped()
-
-
     let message;
     for (fields in result){
         message = result[fields].msg
         break;
     }
-
     const {name, email, password} = req.body
-
     req.flash('error', message)
     req.flash('name', name)
     req.flash('email', email)
     req.flash('password', password)
     res.redirect('/admin/create_account')
+   
 })
 
 
 
 const port = process.env.PORT || 8080
-app.listen(8080, () =>{
-    console.log(`http://localhost:${port}`)
+
+mongoose.connect('mongodb://localhost/accountfaculty', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
 })
+.then(() =>{
+    app.listen(8080, () =>{
+        console.log(`http://localhost:${port}`)
+    })
+})
+.catch(e => console.log('Không thể kết nối đến database: ' +e.message))
+
