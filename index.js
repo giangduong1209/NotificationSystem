@@ -7,6 +7,7 @@ const session = require('express-session')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
 const AccountFaculty = require('./models/AccountFacultyModel')
+const AccountAdmin = require('./models/AccountAdminModel')
 const mongoose = require('mongoose')
 const app = express()
 app.set('view engine','ejs')
@@ -22,6 +23,63 @@ app.use(session({cookie: {maxAge: 60000}}))
 app.use(flash())
 
 
+app.get('/', (req, res) =>{
+    res.render('LoginForm')
+})
+
+
+const validatorlogin = [
+
+    check('email').exists().withMessage('Vui lòng nhập email')
+    .notEmpty().withMessage('Không được để trống email')
+    .isEmail().withMessage('Đây không phải là email hợp lệ'),
+
+    check('password').exists().withMessage('Vui lòng nhập mật khẩu')
+    .notEmpty().withMessage('Không được để trống mật khẩu')
+    .isLength({min: 6}).withMessage('Mật khẩu phải từ 6 ký tự'),
+]
+
+
+app.post('/', validatorlogin, (req, res) =>{
+    let result = validationResult(req);
+    if(result.errors.length === 0){
+        let {email, password} = req.body
+        AccountAdmin.findOne({email: email})
+        .then(ac => {
+            if(!ac){
+                res.redirect('/')
+            }
+            return bcrypt.compare(password, ac.password)
+        })
+        .then(passMatch =>{
+            if(!passMatch){
+                return res.redirect('/')
+            }
+            else{
+                return res.redirect('/admin')
+            }
+        })
+        .catch(e =>{
+            console.log('Đăng nhập thất bại ' + e.message)
+        })
+
+    }
+    else{
+        result = result.mapped()
+        let message;
+        for (fields in result){
+            message = result[fields].msg
+            break;
+        }
+        const {email, password} = req.body
+        req.flash('error', message)
+        req.flash('email', email)
+        req.flash('password', password)
+        res.redirect('/')
+    }
+})
+
+
 app.get('/admin/create_account',(req,res) =>{
     const error = req.flash('error') || ''
     const name = req.flash('name') || ''
@@ -29,6 +87,8 @@ app.get('/admin/create_account',(req,res) =>{
     const password = req.flash('password') || ''
     res.render('register', {error, name, email, password})
 })
+ 
+
 
 const validator = [
     check('name').exists().withMessage('Vui lòng nhập tên của văn phòng/khoa')
@@ -69,21 +129,22 @@ app.post('/admin/create_account', validator, (req, res) =>{
             return user.save()
         })
     }
-    result = result.mapped()
-    let message;
-    for (fields in result){
-        message = result[fields].msg
-        break;
+
+    else{
+        result = result.mapped()
+        let message;
+        for (fields in result){
+            message = result[fields].msg
+            break;
+        }
+        const {name, email, password} = req.body
+        req.flash('error', message)
+        req.flash('name', name)
+        req.flash('email', email)
+        req.flash('password', password)
+        res.redirect('/admin/create_account')
     }
-    const {name, email, password, FAC} = req.body
-    
-
-
-    req.flash('error', message)
-    req.flash('name', name)
-    req.flash('email', email)
-    req.flash('password', password)
-    res.redirect('/admin/create_account')
+    res.redirect('/admin')
    
 })
 
