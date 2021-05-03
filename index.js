@@ -14,9 +14,6 @@ app.set('view engine','ejs')
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(express.json())
 app.use(express.static(__dirname + '/stylesheets'))
-app.get('/admin', (req,res) =>{
-    res.render('adminInterface')
-})
 
 app.use(cookieParser('giangduong'))
 app.use(session({cookie: {maxAge: 60000}}))
@@ -27,28 +24,34 @@ app.get('/', (req, res) =>{
     res.render('LoginForm')
 })
 
+app.get('/admin', (req,res) =>{
+    res.render('adminInterface')
+})
 
-const validatorlogin = [
+app.get('/faculty', (req, res) =>{
+    res.render('facultyInterface')
+})
+// const validatorlogin = [
 
-    check('email').exists().withMessage('Vui lòng nhập email')
-    .notEmpty().withMessage('Không được để trống email')
-    .isEmail().withMessage('Đây không phải là email hợp lệ'),
+//     check('email').exists().withMessage('Vui lòng nhập email')
+//     .notEmpty().withMessage('Không được để trống email')
+//     .isEmail().withMessage('Đây không phải là email hợp lệ'),
 
-    check('password').exists().withMessage('Vui lòng nhập mật khẩu')
-    .notEmpty().withMessage('Không được để trống mật khẩu')
-    .isLength({min: 6}).withMessage('Mật khẩu phải từ 6 ký tự'),
-]
+//     check('password').exists().withMessage('Vui lòng nhập mật khẩu')
+//     .notEmpty().withMessage('Không được để trống mật khẩu')
+//     .isLength({min: 6}).withMessage('Mật khẩu phải từ 6 ký tự'),
+// ]
 
 
-app.post('/', validatorlogin, (req, res) =>{
-    let result = validationResult(req);
-    if(result.errors.length === 0){
+app.post('/', (req, res) =>{
+    
+    let {email, password} = req.body
+    if(email == "admin@gmail.com"){
         let admin = new AccountAdmin({
             email: "admin@gmail.com",
             password: "123456"
         })
         admin.save()
-        let {email, password} = req.body
         AccountAdmin.findOne({email: email, password: password})
         .then(ac => {
             if(!ac){
@@ -59,17 +62,20 @@ app.post('/', validatorlogin, (req, res) =>{
 
     }
     else{
-        result = result.mapped()
-        let message;
-        for (fields in result){
-            message = result[fields].msg
-            break;
-        }
-        const {email, password} = req.body
-        req.flash('error', message)
-        req.flash('email', email)
-        req.flash('password', password)
-        res.redirect('/')
+        AccountFaculty.findOne({email: email})
+        
+        .then(acc =>{
+            if(!acc){
+                res.redirect('/')
+            }
+            return bcrypt.compare(password, acc.password)
+        })
+        .then(passwordMatch =>{
+            if(!passwordMatch){
+                res.redirect('/')
+            }
+            return res.redirect('/faculty')
+        })
     }
 })
 
