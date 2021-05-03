@@ -31,7 +31,7 @@
             <i class="fa fa-bars" id="btn_open"></i>
             <i class="fa fa-bars" id="btn_close"></i>
         </label>        
-        <div class="col-3 sidebarright">
+        <div class="col-2 sidebarright">
             <div class="sidebar">
                 <h3>FACULTY HOME</h3>
                 <ul>
@@ -41,8 +41,19 @@
                 </ul>    
             </div>
         </div>
-        <div class="col-9">
-
+        <div class="col-10">
+            <form method="POST" class="formChangePass">
+                <h3>Change Your Password</h3>
+                <div class="form-group">
+                  <label for="exampleInputEmail1">Enter Your Password</label>
+                  <input type="password" class="form-control" id="exampleInputEmail1" name="password"  placeholder="Enter password">
+                </div>
+                <div class="form-group">
+                  <label for="exampleInputPassword1">Confirm password</label>
+                  <input type="password" class="form-control" id="exampleInputPassword1" name="rePassword" placeholder=" Confirm password">
+                </div>
+                <button type="submit" class="btn btn-primary">Change Password</button>
+              </form>
         </div>
         
     </div>
