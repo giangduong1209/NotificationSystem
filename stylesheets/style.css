@@ -3,25 +3,57 @@
     padding: 0;
     list-style: none;
     text-decoration: none;
+    box-sizing: border-box;
 }
+
+[class*="col-"] {
+    width: 100%;
+}
+.col-1 {width: 8.33%;}
+.col-2 {width: 16.66%;}
+.col-3 {width: 25%;}
+.col-4 {width: 33.33%;}
+.col-5 {width: 41.66%;}
+.col-6 {width: 50%;}
+.col-7 {width: 58.33%;}
+.col-8 {width: 66.66%;}
+.col-9 {width: 75%;}
+.col-10 {width: 83.33%;}
+.col-11 {width: 91.66%;}
+.col-12 {width: 100%;}
+
+@media only screen and (max-width: 768px) {
+    [class*="col-"] {
+      width: 100%;
+    }
+
+    .sidebar {
+        display: none;
+    }
+    .btn_nav #btn_open{
+        display: none;
+    }
+
+    
+  }
 
 .sidebar{
     position: fixed;
     left: 0px;
     width: 260px;
     background-color: #33485C;
-    height: 950px;
+    top: 0px;
+    bottom: 0px;
 }
 
 .sidebar h3{
     font-size: 22px;
     color: white;
     text-align: center;
-    line-height: 65px;
-    position: relative;
+    line-height: 43px;
+
 
 }
-
 .sidebar ul a{
     color: white;
     line-height:  65px;
@@ -32,49 +64,175 @@
     border-top: 1px solid rgba(255, 255, 255, .1);
     border-bottom: 1px solid black;
     text-decoration: none;
+    transition: 2s;
 }
+
 
 ul li:hover a{
     padding-left: 5px;
 }
 
-.boxright{
-    position: static;
-    text-align: right;
+.box-header{
+    position: relative;
     height: 50px;
-    background-color: slategray;
-
+    background-color: #002266;
+    width: 100%;
 }
 
 .dropdown span {
-    margin-right: 20px;
     font-size: 20px;
     margin-top: 10px;
     color: white;
 }
 
 
-.dropdown a{
+.box-header .text-right a{
     margin-right: 20px;
     text-decoration: none;
     font-size: 20px;
 }
 
-#check{
+.btn_nav #btn_open{
+    position: absolute;
+    font-size: 30px;
+    top: 10px;
+    left: 280px;
+    color: white;
+    cursor: pointer;
+
+}
+
+.btn_nav #btn_close{
+    position: absolute;
+    font-size: 30px;
+    top: 10px;
+    left: 10px;
+    color: white;
+    cursor: pointer;
+    display: none;
+
+}
+
+#check {
     display: none;
 }
 
-label #btn, label #cancel{
-    position: absolute;
-    cursor: pointer;
-    background: black;
-    border-radius: 5px;
+#check:checked ~ .sidebarright .sidebar{
+    left: -255px;
+
+}
+#check:checked ~ .btn_nav #btn_close{
+    display: block;
+}
+#check:checked ~ .btn_nav #btn_open{
+    display: none;
 }
 
-label #btn{
-    left: 40px;
-    top: 25px;
-    font-size: 35px;
-    color: white;
-    padding: 5px 10px;
+.form-signin {
+    max-width: 330px;
+    padding: 15px;
+    margin: 0 auto;
+}
+
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+    margin-bottom: 10px;
+}
+
+.form-signin .checkbox {
+    font-weight: normal;
+}
+
+.form-signin .form-control {
+    position: relative;
+    font-size: 16px;
+    height: auto;
+    padding: 10px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.form-signin .form-control:focus {
+    z-index: 2;
+}
+
+.form-signin input[type="text"] {
+    margin-bottom: -1px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.form-signin input[type="password"] {
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.account-wall {
+    /* width: 410px;
+    margin-left: 450px; */
+    background-color: #f7f7f7;
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+}
+#login_box{
+    margin-top: 100px;
+    margin-left: 350px;
+}
+.login-title {
+    color: #555;
+    font-size: 18px;
+    font-weight: 400;
+    display: block;
+}
+
+.profile-img {
+    width: 96px;
+    height: 96px;
+    margin: 0 auto 10px;
+    display: block;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+}
+
+.need-help {
+    margin-top: 10px;
+}
+
+.new-account {
+    display: block;
+    margin-top: 10px;
+}
+
+.gg {
+    display: flex;
+    margin: 0 auto;
+    align-items: center;
+    justify-content: center;
+}
+
+.banner {
+    display: flex;
+    margin: 0 auto;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1px;
+}
+
+.row {
+    background-image: src"https://photos.google.com/photo/AF1QipNgAHfTMA9ZFoA_7Ffl0y-FZblmzeLAGJzpk2M";
+}
+
+.With {
+    text-align: center;
+    display: flex;
+    margin: 0 auto;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1px;
+}
+
+.hr_login{
+    color: black;
 }
