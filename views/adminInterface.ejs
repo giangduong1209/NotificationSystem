@@ -16,28 +16,32 @@
 <body>
 
     <div class="row">
-        <input type="checkbox" id="check">
-        <label for="check">
-            <i class="fas fa-bars" id="btn"></i>
-            <i class="fas fa-times" id="cancel"></i>
-        </label>
-        <div class="sidebar">
-            <h3>ADMIN HOME</h3>
-            <ul>
-                <li><a href=""><i class="fas fa-home"></i>&nbsp;&nbsp; Trang chủ</a></li>
-                <li><a href=""><i class="far fa-id-card"></i>&nbsp;&nbsp; Tài khoản</a></li>
-                <li><a href=""><i class="fas fa-user"></i>&nbsp;&nbsp; Tạo tài khoản Phòng/Khoa</a></li>
-            </ul>
-        </div>
-        <div class="col-12 boxright">
+        <div class="box-header">
             <div class="dropdown text-right py-2">
-                <span>Xin chào</span><a class="dropdown-toggle text-primary" data-toggle="dropdown"></i>&nbsp;&nbsp;Admin</a>
+                <span>Xin chào</span><a class="dropdown-toggle text-primary" data-toggle="dropdown" id="name-login" ><span></i>&nbsp;&nbsp;Admin</span></a>
                 <div class="dropdown-menu">
-                    <a class="dropdown-item" href="#">
+                    <a class="dropdown-item" href="/">
                         <i class="fas fa-sign-out-alt"></i>&nbsp;&nbsp; Đăng xuất</a>
                 </div>
             </div>
         </div>
+        <input type="checkbox" id="check">
+        <label for="check" class="btn_nav">
+            <i class="fa fa-bars" id="btn_open"></i>
+            <i class="fa fa-bars" id="btn_close"></i>
+        </label>
+        <div class="col-2 sidebarright">
+            <div class="sidebar">
+                <h3>ADMIN HOME</h3>
+                <ul>
+                    <li><a href=""><i class="fas fa-home"></i>&nbsp;&nbsp; Trang chủ</a></li>
+                    <li><a href=""><i class="far fa-id-card"></i>&nbsp;&nbsp; Tài khoản</a></li>
+                    <li><a href="/admin/create_account"><i class="fas fa-user"></i>&nbsp;&nbsp; Tạo tài khoản Phòng/Khoa</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        
         
     </div>
     
