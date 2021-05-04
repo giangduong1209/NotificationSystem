@@ -1,0 +1,169 @@
+*{
+    margin: 0;
+    box-sizing: border-box;
+}
+.wrapper,html,body{
+    height: auto;
+}
+.navbar{
+    background-color: #0067AC !important;
+    margin-bottom: 0 !important;
+}
+.wrapper #container{
+    width: 100%;
+    height: 100%;
+}
+.nofi{
+    font-size: 20px;
+    line-height: 20px;
+    height: auto;
+    width: 100%;
+}
+.container-fluid{
+    padding-left: 0  !important;
+    padding-right: 0 !important;
+}
+.navbar-inverse{
+    border-color: #233647 !important;
+    border-radius: 0 !important;
+}
+.navbar-header{
+    background-color: #233647;
+}
+.navbar-right{
+    line-height: 20px; 
+}
+.navbar-inverse .navbar-nav>li>a{
+    text-align: center;
+    color: #ffffff !important;
+    float: right;
+}
+.navbar-inverse .navbar-nav>li{
+    width: 33%;
+    height: 68.67px;
+}
+.navbar-inverse .navbar-nav>li:hover{
+    /* width: 100px;
+    height: 68.67px; */
+    background-color: #233647 !important
+}
+.nofi a{
+    text-decoration: none;
+    color: #ffffff; 
+}
+.menu-toggle{
+    float: left;
+    padding: 20px 20px;
+    background-color: transparent;
+    -webkit-transition: all 0.3s;
+    transition: all 0.3s;
+    height: 50px;
+    border-radius: 0;
+    color: #ffffff;
+    cursor: pointer;
+}
+.menu-toggle i{
+    font-size: 35px;
+}
+footer{
+    background-color: #090;
+    /* min-height: 60px; */
+}
+.left{
+    /* width: 15%; */
+    height:auto;
+    background: #33485c;
+}
+.right{
+    height: 100%;
+}
+.left ul{
+ width: 100%;
+ height: 100%;
+}
+.left ul li{
+    width: 100%;
+    list-style-type: none
+}
+.left ul li a{
+    width: 100%;
+    color: white;
+    line-height:  65px;
+    display: block;
+    box-sizing: border-box;
+    font-size: 15px;
+    border-bottom: 1px solid black;
+    text-decoration: none;
+}
+.left ul li a:hover{
+    padding-left: 15px;
+    background-color: #233647
+
+}
+/* TIME LINE */
+.timeline{
+    background-color: yellow;
+    height: 100%; 
+    position: relative;
+}
+.notify{
+    background-color: violet;
+    height: 100%;
+}
+.notify .item{
+    width: 100%;
+    display: block;
+    box-sizing: border-box;
+    font-size: 15px;
+    border-top:1px solid white;
+    border-bottom:1px solid white;
+    text-decoration: none;
+}
+
+/* STATUS BAR */
+.timeline .postStatus{
+    background-color: #000000b3;
+    width: 30%;
+    height: 10%;
+    left: 38%;
+    display: inline-flex;
+}
+.timeline .postStatus .btn{
+    width: 100%;
+}
+.timeline .postStatus .btn input{
+   width: 100%;
+}
+.timeline .postStatus .btn button{
+    width: 30%;
+}
+.timeline .postStatus .btn button i{
+    font-size: 80%;
+}
+.timeline .postStatus img{
+    width: 15%;
+    border-radius: 50%;
+}
+/* NEWS */
+.box{
+    width: 100%;
+    height: auto;
+}
+.news{
+    width: 71%;
+    position: relative;
+    left: 20%;
+    margin-top: 5px;
+    border: 1px solid white;
+}
+.news .userInfor{
+    display: flex;
+}
+.news .userInfor img{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+.news .context{
+    margin-left: auto;
+}
