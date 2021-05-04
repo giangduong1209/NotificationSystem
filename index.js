@@ -10,6 +10,7 @@ const AccountFaculty = require('./models/AccountFacultyModel')
 const AccountAdmin = require('./models/AccountAdminModel')
 const mongoose = require('mongoose')
 const app = express()
+const KhoaRouter = require('./routers/khoa')
 app.set('view engine','ejs')
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(express.json())
@@ -22,7 +23,7 @@ app.use(cookieParser('giangduong'))
 app.use(session({cookie: {maxAge: 60000}}))
 app.use(flash())
 
-
+app.use('/khoa',KhoaRouter)
 app.get('/', (req, res) =>{
     res.render('LoginForm')
 })
