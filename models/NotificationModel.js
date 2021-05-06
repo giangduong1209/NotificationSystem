@@ -7,8 +7,7 @@ const Notification = new Schema({
     context: {
         type: String,
     },
-    password: String,
     permission: String,
 })
 
-module.exports = mongoose.model('AccountFaculty', AccountFacultySchema)
+module.exports = mongoose.model('Notification', Notification)

@@ -12,3 +12,7 @@ $('.menu-toggle').click(e=>{
     }
    
 })
+$('#post').click(e=>{
+    $('#confirm-post-dialog').modal('show')
+})
+CKEDITOR.replace('txtContent')

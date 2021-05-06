@@ -8,8 +8,9 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css">
+    <script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
     <link rel="stylesheet" href="main.css">
-    <title>Document</title>
+    <title>Khoa</title>
 </head>
 <body>
     <div class="wrapper">
@@ -34,7 +35,7 @@
             <div class="left col-lg-2">
                 <ul>
                     <li><a href=""><i class="fas fa-home"></i>&nbsp;&nbsp; Đổi mật khẩu</a></li>
-                    <li><a href=""><i class="far fa-id-card"></i>&nbsp;&nbsp; Đăng bài</a></li>
+                    <li><a id="post" role="button"><i class="far fa-id-card"></i>&nbsp;&nbsp; Đăng bài</a></li>
                     <li><a href=""><i class="fas fa-user"></i>&nbsp;&nbsp; Xem toàn bộ bài đăng</a></li>
                 </ul>
             </div>              
@@ -157,6 +158,52 @@
                 </div>
             </div>
         </div>
-    <script src="main.js"></script>
+        <div id="confirm-post-dialog" class="modal fade">
+            <div class="modal-dialog ">
+              <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                  <h4 class="modal-title">Đăng Bài</h4>
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <form action="POST">
+                            <!-- Modal body -->
+                <div  class="modal-body">
+                    <div class="form-group">
+                        <label for="title">Tiêu đề bài đăng</label>
+                        <input value="" class="form-control" type="text" placeholder="Nhập tên người dùng" id="title" name="title">
+                    </div>
+                    <div class="form-group">
+                        <label for="chude">Chọn chuyên đề:</label>
+                        <%khoa.forEach(e =>{%>
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input value="<%=e.permission%>" type="radio" class="custom-control-input" id="gender-male" name="gender">
+                            <label class="custom-control-label" for="gender-male"><%=e.permission%></label>
+                        </div>
+                        <%})%>
+                       
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input value="female" type="radio" class="custom-control-input" id="gender-female" name="gender">
+                            <label class="custom-control-label" for="gender-female"></label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="context">Nhập nội dung</label>
+                        <textarea name="txtContent" id="txtContent">Type some text here.</textarea>
+                    </div>
+                    <div style="display: none;" id="error" class="alert alert-danger">
+                        Vui lòng nhập đầy đủ thông tin
+                    </div>          
+            </div>
+            <!-- Modal footer -->
+            <div class="modal-footer">
+              <button id="btnUpdate" data-id="???" type="button" class="btn btn-primary">Cập nhật</button>
+              <button type="button" class="btn btn-dark" data-dismiss="modal">Đóng</button>
+            </div>
+                </form>
+              </div>
+            </div>
+          </div>
+            <script src="main.js"></script>
 </body>
 </html>

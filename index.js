@@ -1,11 +1,15 @@
 const { urlencoded } = require('express')
 const express = require('express')
+require('dotenv').config()
 const {check, validationResult} = require('express-validator')
 const bcrypt = require('bcrypt')
 const flash = require('express-flash')
 const session = require('express-session')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
+const jwt = require('jsonwebtoken')
+
+const CheckLogin = require('./auth/CheckLogin')
 const AccountFaculty = require('./models/AccountFacultyModel')
 const AccountAdmin = require('./models/AccountAdminModel')
 const mongoose = require('mongoose')
@@ -14,7 +18,9 @@ const KhoaRouter = require('./routers/khoa')
 app.set('view engine','ejs')
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(express.json())
+app.set("views","./views")
 app.use(express.static(__dirname + '/stylesheets'))
+app.use('/public',express.static('./public'))
 app.get('/admin', (req,res) =>{
     res.render('adminInterface')
 })
@@ -42,22 +48,43 @@ const validatorlogin = [
 
 
 app.post('/', validatorlogin, (req, res) =>{
+    if(req.session.user){
+        return res.redirect('/')
+    }
     let result = validationResult(req);
     if(result.errors.length === 0){
-        let admin = new AccountAdmin({
-            email: "admin@gmail.com",
-            password: "123456"
-        })
-        admin.save()
         let {email, password} = req.body
-        AccountAdmin.findOne({email: email, password: password})
-        .then(ac => {
-            if(!ac){
-                res.redirect('/')
-            }
+        let account = undefined
+        if(email === "admin@gmail.com" && password==="123456"){
+            req.session.user=email
             return res.redirect('/admin')
-        })
-
+        }    
+        else{
+            AccountFaculty.findOne({email:email})
+            .then( p=>{
+                console.log(p)
+                if(!p){
+                    message ="Tài khoản không tồn tại"
+                    req.flash('error', message)
+                    return res.redirect('/')
+                }else{
+                    account=p
+                    bcrypt.compare(password,p.password,(err,result)=>{
+                        if(result!==true){
+                            message ="Tài khoản không tồn tại"
+                            req.flash('error', message)
+                            return res.redirect('/')
+                        }else{
+                            delete p.password
+                            req.session.user = p.name
+                            console.log("Gia tri session: ",req.session.user)
+                            return res.redirect('/khoa')
+                        }
+                    })
+                }
+            })
+            .catch(e =>{console.log(e)})
+        }
     }
     else{
         result = result.mapped()
@@ -73,9 +100,17 @@ app.post('/', validatorlogin, (req, res) =>{
         res.redirect('/')
     }
 })
-
-
+app.get('/admin',(req,res)=>{
+    if(!req.session.user){
+        return res.redirect('/')
+    }
+    console.log("admin: ",req.session.user)
+    res.render('adminInterface')
+})
 app.get('/admin/create_account',(req,res) =>{
+    if(!req.session.user){
+        return res.redirect('/')
+    }
     const error = req.flash('error') || ''
     const name = req.flash('name') || ''
     const email = req.flash('email') || ''
@@ -106,7 +141,6 @@ const validator = [
         return true;
     })
 ]
-
 app.post('/admin/create_account', validator, (req, res) =>{
     let result = validationResult(req);
     if (result.errors.length === 0){
