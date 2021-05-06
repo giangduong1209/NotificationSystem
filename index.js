@@ -15,6 +15,10 @@ app.set('view engine','ejs')
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(express.json())
 app.use(express.static(__dirname + '/stylesheets'))
+<<<<<<< Updated upstream
+=======
+app.use('/public',express.static('./public'))
+>>>>>>> Stashed changes
 
 app.use(cookieParser('giangduong'))
 app.use(session({cookie: {maxAge: 60000}}))
@@ -24,6 +28,7 @@ app.use('/khoa',KhoaRouter)
 app.get('/', (req, res) =>{
     res.render('LoginForm')
 })
+<<<<<<< Updated upstream
 
 app.get('/admin', (req,res) =>{
     res.render('adminInterface')
@@ -33,6 +38,9 @@ app.get('/faculty', (req, res) =>{
     res.render('facultyInterface')
 })
 // const validatorlogin = [
+=======
+const validatorlogin = [
+>>>>>>> Stashed changes
 
 //     check('email').exists().withMessage('Vui lòng nhập email')
 //     .notEmpty().withMessage('Không được để trống email')
@@ -43,6 +51,7 @@ app.get('/faculty', (req, res) =>{
 //     .isLength({min: 6}).withMessage('Mật khẩu phải từ 6 ký tự'),
 // ]
 
+<<<<<<< Updated upstream
 
 app.post('/', (req, res) =>{
     
@@ -81,6 +90,67 @@ app.post('/', (req, res) =>{
 })
 
 
+=======
+app.get('/admin', (req,res) =>{
+    if(!req.session.user){
+        return res.redirect('/')
+    }
+    res.render('adminInterface')
+})
+app.post('/', validatorlogin, (req, res) =>{
+    if(req.session.user){
+        return res.redirect('/')
+    }
+    let result = validationResult(req);
+    if(result.errors.length === 0){
+        let {email, password} = req.body
+        let account = undefined
+        if(email === "admin@gmail.com" && password==="123456"){
+            req.session.user='admin'
+            return res.redirect('/admin')
+        }    
+        else{
+            AccountFaculty.findOne({email:email})
+            .then( p=>{
+                console.log(p)
+                if(!p){
+                    message ="Tài khoản không tồn tại"
+                    req.flash('error', message)
+                    return res.redirect('/')
+                }else{
+                    account=p
+                    bcrypt.compare(password,p.password,(err,result)=>{
+                        if(result!==true){
+                            message ="Tài khoản không tồn tại"
+                            req.flash('error', message)
+                            return res.redirect('/')
+                        }else{
+                            delete p.password
+                            req.session.user = p.email
+                            console.log("Gia tri session: ",req.session.user)
+                            return res.redirect('/khoa')
+                        }
+                    })
+                }
+            })
+            .catch(e =>{console.log(e)})
+        }
+    }
+    else{
+        result = result.mapped()
+        let message;
+        for (fields in result){
+            message = result[fields].msg
+            break;
+        }
+        const {email, password} = req.body
+        req.flash('error', message)
+        req.flash('email', email)
+        req.flash('password', password)
+        res.redirect('/')
+    }
+})
+>>>>>>> Stashed changes
 app.get('/admin/create_account',(req,res) =>{
     const error = req.flash('error') || ''
     const name = req.flash('name') || ''

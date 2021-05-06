@@ -119,7 +119,9 @@ footer{
     border-bottom:1px solid white;
     text-decoration: none;
 }
-
+.notify .item .noidung{
+    text-overflow: ellipsis;
+}
 /* STATUS BAR */
 .timeline .postStatus{
     background-color: #000000b3;
