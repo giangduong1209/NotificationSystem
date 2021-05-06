@@ -15,10 +15,7 @@ app.set('view engine','ejs')
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(express.json())
 app.use(express.static(__dirname + '/stylesheets'))
-<<<<<<< Updated upstream
-=======
 app.use('/public',express.static('./public'))
->>>>>>> Stashed changes
 
 app.use(cookieParser('giangduong'))
 app.use(session({cookie: {maxAge: 60000}}))
@@ -28,7 +25,6 @@ app.use('/khoa',KhoaRouter)
 app.get('/', (req, res) =>{
     res.render('LoginForm')
 })
-<<<<<<< Updated upstream
 
 app.get('/admin', (req,res) =>{
     res.render('adminInterface')
@@ -37,60 +33,17 @@ app.get('/admin', (req,res) =>{
 app.get('/faculty', (req, res) =>{
     res.render('facultyInterface')
 })
-// const validatorlogin = [
-=======
 const validatorlogin = [
->>>>>>> Stashed changes
 
-//     check('email').exists().withMessage('Vui lòng nhập email')
-//     .notEmpty().withMessage('Không được để trống email')
-//     .isEmail().withMessage('Đây không phải là email hợp lệ'),
+    check('email').exists().withMessage('Vui lòng nhập email')
+    .notEmpty().withMessage('Không được để trống email')
+    .isEmail().withMessage('Đây không phải là email hợp lệ'),
 
-//     check('password').exists().withMessage('Vui lòng nhập mật khẩu')
-//     .notEmpty().withMessage('Không được để trống mật khẩu')
-//     .isLength({min: 6}).withMessage('Mật khẩu phải từ 6 ký tự'),
-// ]
+    check('password').exists().withMessage('Vui lòng nhập mật khẩu')
+    .notEmpty().withMessage('Không được để trống mật khẩu')
+    .isLength({min: 6}).withMessage('Mật khẩu phải từ 6 ký tự'),
+]
 
-<<<<<<< Updated upstream
-
-app.post('/', (req, res) =>{
-    
-    let {email, password} = req.body
-    if(email == "admin@gmail.com"){
-        let admin = new AccountAdmin({
-            email: "admin@gmail.com",
-            password: "123456"
-        })
-        admin.save()
-        AccountAdmin.findOne({email: email, password: password})
-        .then(ac => {
-            if(!ac){
-                res.redirect('/')
-            }
-            return res.redirect('/admin')
-        })
-
-    }
-    else{
-        AccountFaculty.findOne({email: email})
-        
-        .then(acc =>{
-            if(!acc){
-                res.redirect('/')
-            }
-            return bcrypt.compare(password, acc.password)
-        })
-        .then(passwordMatch =>{
-            if(!passwordMatch){
-                res.redirect('/')
-            }
-            return res.redirect('/faculty')
-        })
-    }
-})
-
-
-=======
 app.get('/admin', (req,res) =>{
     if(!req.session.user){
         return res.redirect('/')
@@ -150,7 +103,6 @@ app.post('/', validatorlogin, (req, res) =>{
         res.redirect('/')
     }
 })
->>>>>>> Stashed changes
 app.get('/admin/create_account',(req,res) =>{
     const error = req.flash('error') || ''
     const name = req.flash('name') || ''
