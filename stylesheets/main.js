@@ -13,10 +13,7 @@ $('.menu-toggle').click(e=>{
         $('.left').css('transition','1s')
     }
    
-<<<<<<< Updated upstream
-=======
 })
-$('.noidung').html($('.noidung').val())
 $('#post').click(e=>{
     $('#confirm-post-dialog').modal('show')
 })
@@ -46,5 +43,4 @@ $('#btnUpload').click(e=>{
         })
         .catch(e=>console.log(e))
     }
->>>>>>> Stashed changes
 })

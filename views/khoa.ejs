@@ -8,6 +8,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css">
+    <script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
     <link rel="stylesheet" href="main.css">
     <title>Document</title>
 </head>
@@ -128,8 +129,8 @@
                                 <%noti.forEach(e=>{%>
                                 <div class="item">
                                     <div class="khoa"><%=e.permission%></div>
-                                    <div class="title"><b>THÔNG BÁO: <%=e.title%></b></div>
                                     <div class="noidung"><%=e.context%></div>
+                                    <div class="title"><b>THÔNG BÁO: <%=e.title%></b></div>
                                 </div>
                                 <%})%>
                             </li>
@@ -139,9 +140,6 @@
                 </div>
             </div>
         </div>
-<<<<<<< Updated upstream
-    <script src="main.js"></script>
-=======
         <div id="confirm-post-dialog" class="modal fade">
             <div class="modal-dialog ">
               <div class="modal-content">
@@ -184,6 +182,5 @@
             </div>
           </div>
             <script src="main.js"></script>
->>>>>>> Stashed changes
 </body>
 </html>

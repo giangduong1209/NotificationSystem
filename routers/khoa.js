@@ -1,10 +1,5 @@
 const express = require('express')
 const Router = express.Router()
-<<<<<<< Updated upstream
-
-Router.get('/',(req,res)=>{
-    res.render('khoa')
-=======
 const parser = require('parser')
 const Notification = require('../models/NotificationModel')
 const AccountFaculty = require('../models/AccountFacultyModel')
@@ -45,7 +40,13 @@ Router.get('/',(req,res)=>{
         for(var i=0;i<array.length;i++){
             a.push(data[array[i]])
         }
-        res.render('khoa',{name:p.name,permission:a, tag:array, noti:d})
+        Notification.find().then(d=>{
+            d.forEach(e=>{
+                console.log(e.context)
+            })
+            res.render('khoa',{name:p.name,permission:a, tag:array, noti:d})
+        })
+        
     })
     
 })
@@ -67,7 +68,6 @@ Router.post('/upload',(req,res)=>{
     })
     console.log('da nhan anh')
     res.json({code:0,message:'Khong loi'})
->>>>>>> Stashed changes
 })
 
 module.exports = Router
