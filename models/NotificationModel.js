@@ -1,9 +1,8 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
-
-
-const Notification = new Schema({
+const NotificationSchema = new Schema({
     title: String,
+<<<<<<< Updated upstream
     context: {
         type: String,
     },
@@ -12,3 +11,10 @@ const Notification = new Schema({
 })
 
 module.exports = mongoose.model('AccountFaculty', AccountFacultySchema)
+=======
+    context: String,
+    permission: String,
+})
+
+module.exports = mongoose.model('Notification', NotificationSchema)
+>>>>>>> Stashed changes
