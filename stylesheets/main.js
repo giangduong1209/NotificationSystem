@@ -114,28 +114,60 @@ $('#post').click(e=>{
     console.log('ok')
     $('#confirm-post-dialog').modal('show')
 })
-
-
+//Update Information Student
+$('#update').click(e=>{
+    console.log('ok')
+    $('#confirm-update-dialog').modal('show')
+})
+$('#btnStudentUpdate').click(e=>{
+  var nameStu = $('#nameStu').val()
+  var classStu = $('#class').val()
+  var facuStu = $('#facu').val()
+  console.log(nameStu)
+  console.log(classStu)
+  console.log(facuStu)
+  if(nameStu===''||classStu===''||facuStu===''){
+      $('#error').removeAttr('style')
+      $('#error').val("Vui lòng nhập đầy đủ thông tin")
+  }else{
+      let data ={
+          title:Title,
+          context:txtContent,
+          permission:chude
+      }
+      // console.log(data)
+      fetch('http://localhost:8080/khoa/upload',{method:'POST',body: JSON.stringify(data)})
+      .then(res=>res.json())
+      .then(json=>{
+          console.log(json)
+          title=''
+          chude=''
+          txtContent=''
+          $('#confirm-post-dialog').modal('hide')
+      })
+      .catch(e=>console.log(e))
+  }
+})
 
 function notifyOnline(s){
-    $("#online-notification strong").html(s)
-    $("#online-notification").fadeTo(2000,1)//show
-    setTimeout(()=>{
-      $('#online-notification').fadeTo(2000,0)// hide
-    },4000)
-  }
-  function remove(id){
-    $(`#${id}`).remove()
-    $("#online-count").html($('#user-list').length)// cập nhật lại số lượng sau khi xóa
-  }
+$("#online-notification strong").html(s)
+$("#online-notification").fadeTo(2000,1)//show
+setTimeout(()=>{
+    $('#online-notification').fadeTo(2000,0)// hide
+},4000)
+}
+function remove(id){
+$(`#${id}`).remove()
+$("#online-count").html($('#user-list').length)// cập nhật lại số lượng sau khi xóa
+}
 
-  function notifyOffline(username){
-    $("#offline-notification strong").html(username)
-    $("#offline-notification").fadeTo(2000,1)//show
-    setTimeout(()=>{
-      $('#offline-notification').fadeTo(2000,0)// hide
-    },4000)
-  }
+function notifyOffline(username){
+$("#offline-notification strong").html(username)
+$("#offline-notification").fadeTo(2000,1)//show
+setTimeout(()=>{
+    $('#offline-notification').fadeTo(2000,0)// hide
+},4000)
+}
 CKEDITOR.replace('txtContent')
 $('#btnUpload').click(e=>{
     var Title = $('#title').val()
@@ -171,7 +203,6 @@ $('.edit').click(e=>{
   $('#confirm-edit-dialog').modal('show')
 
 })
-
 function onSignIn(googleUser) {
     var id_token = googleUser.getAuthResponse().id_token;
     console.log(id_token)
@@ -196,3 +227,8 @@ function signOut() {
     });
   }
 
+var loadFile = function(event) {
+	var image = document.getElementById('output');
+	image.src = URL.createObjectURL(event.target.files[0]);
+  console.log(image.src)
+};
