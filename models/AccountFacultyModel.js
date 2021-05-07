@@ -9,7 +9,8 @@ const AccountFacultySchema = new Schema({
         unique: true
     },
     password: String,
-    permission: String,
+    permission: String
+
 })
 
 module.exports = mongoose.model('AccountFaculty', AccountFacultySchema)

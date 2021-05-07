@@ -6,6 +6,7 @@ const flash = require('express-flash')
 const session = require('express-session')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
+const socketio = require('socket.io')
 const ObjectID = require('mongodb').ObjectID;
 const AccountFaculty = require('./models/AccountFacultyModel')
 const AccountAdmin = require('./models/AccountAdminModel')
@@ -199,8 +200,19 @@ app.get('/logout',(req,res)=>{
     req.session.user = null
     res.redirect('/')
 })
-app.get('/thongbao',(req,res)=>{
-    res.send('Trang thong bao')
+app.get('/allthongbao/:page',(req,res)=>{
+    let perPage = 5; // số lượng sản phẩm xuất hiện trên 1 page
+    let page = req.params.page || 1; 
+    Notification
+      .find() // find tất cả các data
+      .skip((perPage * page) - perPage) // Trong page đầu tiên sẽ bỏ qua giá trị là 0
+      .limit(perPage)
+      .exec((err, notifications) => {
+        Notification.countDocuments((err, count) => { // đếm để tính có bao nhiêu trang
+          if (err) return next(err);
+           res.render('notification',{notifications,current:page,pages:Math.ceil(count/perPage)}) // Trả về dữ liệu các sản phẩm theo định dạng như JSON, XML,...
+        });
+      });
 })
 app.get('/thongbao/:id',(req,res)=>{
     let id=(req.params)
@@ -281,9 +293,33 @@ mongoose.connect('mongodb://localhost/accountfaculty', {
     useUnifiedTopology: true,
 })
 .then(() =>{
-    app.listen(8080, () =>{
-        console.log(`http://localhost:${port}`)
-    })
+        const httpServer = app.listen(port,()=>console.log('http://localhost:'+port))
+        const io = socketio(httpServer)
+        io.on('connection',client=>{
+            client.free= true
+            client.loginAt=new Date().toLocaleDateString()
+            console.log(`Client ${client.id} connected`)
+            let users= Array.from(io.sockets.sockets.values()).map(socket=>({id:socket.id, username: socket.username, free: socket.loginAt, free:socket.free}))
+            console.log(users)
+            client.on('disconnect',()=>{
+                console.log(`${client.id} has left`)
+                
+                client.broadcast.emit('user-leave', client.id)
+                 }
+            )
+            client.on('notify',n=>{
+                console.log(n)
+                client.broadcast.emit('alertNoti',{message:`Có thông báo mới:<a href="/thongbao/${n}">Xem chi tiết</a>`})
+            })
+            client.on('regiter-nameUser', username=>{
+                client.username = username
+                client.broadcast.emit("register-name",{id:client.id, username: username})
+            })
+            client.send(" this  is messsage from server")
+           
+            client.emit('list-users',users)
+            client.broadcast.emit('new-user',{id: client.id, username: client.name, free: client.free, loginAt: client.loginAt})
+        })
 })
 .catch(e => console.log('Không thể kết nối đến database: ' +e.message))
 

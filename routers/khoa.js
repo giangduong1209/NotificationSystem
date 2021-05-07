@@ -2,7 +2,15 @@ const express = require('express')
 const Router = express.Router()
 const parser = require('parser')
 const Notification = require('../models/NotificationModel')
+const ObjectID = require('mongodb').ObjectID;
 const AccountFaculty = require('../models/AccountFacultyModel')
+let name;
+Router.get('/thongbao/:id',(req,res)=>{
+    Notification.find({_id:ObjectID(id)})
+    .then(p=>{
+        return res.json({code:0,message:'Lấy thành công',data:p})
+    })
+})
 Router.get('/',(req,res)=>{
     if(!req.session.user){
         return res.redirect('/')
@@ -35,19 +43,19 @@ Router.get('/',(req,res)=>{
     AccountFaculty.findOne({email:req.session.user})
     .then(p=>{
         var temp =p.permission
+        name=p.name
         var array = temp.split(',')
         var a=[]
         for(var i=0;i<array.length;i++){
             a.push(data[array[i]])
         }
-        Notification.find().then(d=>{
-            res.render('khoa',{name:p.name,permission:a, tag:array, noti:d})
-        })
-        
-    })
-    
+        Notification.find({})
+        .then(p=>{
+            console.log("Khoa",p)
+            res.render('khoa',{name:p.name,permission:a, tag:array, notifications:p})
+        })    
+    }) 
 })
-
 Router.post('/upload',(req,res)=>{
     let result=''
     req.on('data',d=>result+=d.toString())
@@ -59,13 +67,10 @@ Router.post('/upload',(req,res)=>{
             permission:data.permission
         })
         noti.save()
-        Notification.find()
-        .then(e=>{
-            console.log(e)
-        })
+        res.json({code:0,message:'Khong loi',data:noti._id})
     })
     console.log('da nhan anh')
-    res.json({code:0,message:'Khong loi'})
+    
 })
 
 module.exports = Router
