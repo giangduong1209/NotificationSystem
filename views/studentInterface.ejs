@@ -36,7 +36,7 @@
                 <h3><%= user.name %></h3>
                 <ul>
                     <li><a href=""><i class="fas fa-home"></i>&nbsp;&nbsp; Trang chủ</a></li>
-                    <li><a href=""><i class="far fa-id-card"></i>&nbsp;&nbsp; Tài khoản</a></li>
+                    <li id="update" role="button"><a><i class="far fa-id-card"></i>&nbsp;&nbsp; Tài khoản</a></li>
                     <li id="post" role="button"><a><i class="far fa-id-card"></i>&nbsp;&nbsp; Đăng bài</a></li>
                 </ul>
             </div>
@@ -155,7 +155,47 @@
             </div>
         </div>
 
-        
+        <div id="confirm-update-dialog" class="modal fade">
+            <div class="modal-dialog ">
+              <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                  <h4 class="modal-title">Cập Nhật Thông Tin</h4>
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <form action="POST">
+                            <!-- Modal body -->
+                <div  class="modal-body">
+                    <div class="form-group">
+                        <label for="nameStu">Tên hiển thị</label>
+                        <input value="" class="form-control" type="text" placeholder="Nhập tên người dùng" id="nameStu" name="nameStu">
+                    </div>
+                    <div class="form-group">
+                        <label for="class">Lớp</label>
+                        <input value="" class="form-control" type="text" placeholder="Lớp" id="class" name="class">
+                    </div>
+                    <div class="form-group">
+                        <label for="facu">Khoa</label>
+                        <input value="" class="form-control" type="text" placeholder="Khoa" id="facu" name="facu">
+                    </div>
+                    <div class="form-group ima">
+                        <label for="file">Vui lòng chọn ảnh đại diện</label>
+                        <p><input type="file"  accept="image/*" name="image" id="file"  onchange="loadFile(event)"></p>
+                        <p><img id="output"/></p>
+                    </div>
+                    <div style="display: none;" id="error" class="alert alert-danger">
+                        Vui lòng nhập đầy đủ thông tin
+                    </div>          
+            </div>
+            <!-- Modal footer -->
+            <div class="modal-footer">
+              <button id="btnStudentUpdate" data-id="???" type="button" class="btn btn-primary">Cập nhật</button>
+              <button type="button" class="btn btn-dark" data-dismiss="modal">Đóng</button>
+            </div>
+                </form>
+              </div>
+            </div>
+        </div>
         
         
     </div>
