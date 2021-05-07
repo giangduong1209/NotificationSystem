@@ -155,7 +155,27 @@ const validator = [
         return true;
     })
 ]
+app.get('/logout',(req,res)=>{
+    req.session.user = null
+    res.redirect('/')
+})
+app.get('/thongbao',(req,res)=>{
+    res.send('Trang thong bao')
+})
+app.get('/thongbao/:id',(req,res)=>{
+    let id=(req.params)
+    console.log(id.id)
+    Notification.find({_id: ObjectID(id.id)})
+    .then(p=>{
+        if(p){
+           res.render('detailnotification',{p:p[0]})
+        }else{
+            console.log('khong tim thay')
+        }
+    })
+    .catch(e=>console.log(e))
 
+})
 app.post('/admin/create_account', validator, (req, res) =>{
     let result = validationResult(req);
     if (result.errors.length === 0){

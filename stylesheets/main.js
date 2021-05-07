@@ -1,6 +1,5 @@
 
 var c = 0
-
 $('.menu-toggle').click(e=>{
     if(c%2==0){
         $('.left').hide()
@@ -15,13 +14,14 @@ $('.menu-toggle').click(e=>{
    
 })
 $('#post').click(e=>{
+    console.log('ok')
     $('#confirm-post-dialog').modal('show')
 })
 CKEDITOR.replace('txtContent')
 $('#btnUpload').click(e=>{
     var Title = $('#title').val()
     var chude = $('input[name="chude"]:checked').val()
-    txtContent = CKEDITOR.instances['txtContent'].getData()
+    txtContent =  CKEDITOR.instances['txtContent'].getData()
     if(title===''||chude===''||txtContent===''){
         $('#error').removeAttr('style')
         $('#error').val("Vui lòng nhập đầy đủ thông tin")
@@ -44,5 +44,4 @@ $('#btnUpload').click(e=>{
         .catch(e=>console.log(e))
     }
 })
-
 

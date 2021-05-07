@@ -41,13 +41,13 @@ Router.get('/',(req,res)=>{
             a.push(data[array[i]])
         }
         Notification.find().then(d=>{
-            
             res.render('khoa',{name:p.name,permission:a, tag:array, noti:d})
         })
         
     })
     
 })
+
 Router.post('/upload',(req,res)=>{
     let result=''
     req.on('data',d=>result+=d.toString())
