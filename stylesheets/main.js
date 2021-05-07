@@ -164,9 +164,35 @@ $('#btnUpload').click(e=>{
     }
 })
 
+
 // EDIT
 $('.edit').click(e=>{
   let id = e.target.dataset.id
   $('#confirm-edit-dialog').modal('show')
 
 })
+
+function onSignIn(googleUser) {
+    var id_token = googleUser.getAuthResponse().id_token;
+    console.log(id_token)
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/loginGG');
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onload = function() {
+        if (xhr.responseText == 'success') {
+            signOut();
+            location.assign('/student')
+        }
+    };
+    xhr.send(JSON.stringify({
+        token: id_token
+    }));
+}
+
+function signOut() {
+    var auth2 = gapi.auth2.getAuthInstance();
+    auth2.signOut().then(function () {
+      console.log('User signed out.');
+    });
+  }
+
