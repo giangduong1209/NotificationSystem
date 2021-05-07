@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,47 +16,88 @@
 </head>
 <body>
 
-    <div class="row">
-        <div class="box-header">
-            <div class="dropdown text-right py-2">
-                <span>Xin chào</span><a class="dropdown-toggle text-primary" data-toggle="dropdown" id="name-login" ><span></i>&nbsp;&nbsp;IT Faculty</span></a>
-                <div class="dropdown-menu">
-                    <a class="dropdown-item" href="/">
-                        <i class="fas fa-sign-out-alt"></i>&nbsp;&nbsp; Đăng xuất</a>
+    <div class="container" style="margin-top: 50px">
+        <div class="row">   
+          <!-- ITEMS -->
+          <%for(var i = 0; i<notifications.length; i++) { %>
+          <div class="col-md-3">
+            <div class="p-1">
+              <div class="card">
+                <img src="# class="card-img-top">
+                <div class="card-body">
+                  <h4 class="card-title"><%= notifications[i].title %></h4>
+                  <p class="card-text"><%= notifications[i].permission %></p>
+                  <p class="card-text"><%= notifications[i].price %>$</p>
                 </div>
+              </div>
             </div>
+          </div>
+          <% } %>
+        </div> 
+       <!-- pagination -->
+        <div class="row">
+          <!-- hiển thị phân trang nếu có trang -->
+          <% if(pages > 0) { %>
+          <nav class="mx-auto">
+            <ul class="pagination" style="margin-top: 2rem;">
+            
+              <!-- FIRST ITEM -->  
+              <% if(current == 1) { %> 
+                  <li class="page-item disabled">
+                    <a class="page-link" href="/">First</a>
+                  </li>
+              <% } else { %>
+                  <li class="page-item">
+                    <a class="page-link" href="/">First</a>
+                  </li>
+              <% } %>
+              
+              <!-- ITEMS  -->
+              <% var i = (Number(current) > 3 ? Number(current) - 2 : 1) %> 
+              <% if(i !== 1) { %>
+                  <li class="page-item disabled">
+                    <a class="page-link" href="#">...</a>
+                  </li>
+              <% } %>
+              <% for(; i <= (Number(current) + 2) && i <= pages; i++) { %>
+                <% if(i == current) { %>
+                  <li class="page-item active">
+                    <a class="page-link" href="/thongbao/<%= i %>/">
+                      <%= i %>
+                    </a>
+                  </li>
+              <% } else { %>
+                  <li class="page-item">
+                    <a class="page-link" href="/thongbao/<%= i %>/">
+                      <%= i %>
+                    </a>
+                  </li>
+              <% } %>
+              <% if (i == Number(current) + 2 && i < pages) { %>
+                  <li class="page-item disabled">
+                    <a class="page-link" href="#">...</a>
+                  </li>
+              <% } %>
+              <% } %>
+              
+              <!-- LAST ITEM -->
+              <% if(current == pages) { %> 
+                  <li class="page-item disabled">
+                    <a class="page-link" href="#">
+                      Last
+                    </a>
+                  </li>
+              <% } else { %>
+                  <li class="page-item">
+                    <a class="page-link" href="/thongbao/<%= pages %>/">
+                      Last
+                    </a>
+                  </li>
+              <% } %>
+            </ul>
+          </nav>
+          <% } %>
         </div>
-
-        <input type="checkbox" id="check">
-        <label for="check" class="btn_nav">
-            <i class="fa fa-bars" id="btn_open"></i>
-            <i class="fa fa-bars" id="btn_close"></i>
-        </label>        
-        <div class="col-2 sidebarright">
-            <div class="sidebar">
-                <h3>FACULTY HOME</h3>
-                <ul>
-                    <li><a href=""><i class="fas fa-home"></i>&nbsp;&nbsp; Trang chủ</a></li>
-                    <li><a href=""><i class="far fa-id-card"></i>&nbsp;&nbsp; Tài khoản</a></li>
-                    
-                </ul>    
-            </div>
-        </div>
-        <div class="col-10">
-            <form method="POST" class="formChangePass">
-                <h3>Change Your Password</h3>
-                <div class="form-group">
-                  <label for="exampleInputEmail1">Enter Your Password</label>
-                  <input type="password" class="form-control" id="exampleInputEmail1" name="password"  placeholder="Enter password">
-                </div>
-                <div class="form-group">
-                  <label for="exampleInputPassword1">Confirm password</label>
-                  <input type="password" class="form-control" id="exampleInputPassword1" name="rePassword" placeholder=" Confirm password">
-                </div>
-                <button type="submit" class="btn btn-primary">Change Password</button>
-              </form>
-        </div>
-        
-    </div>
+      </div>
 </body>
 </html>

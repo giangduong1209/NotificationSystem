@@ -3,6 +3,13 @@ const Router = express.Router()
 const parser = require('parser')
 const Notification = require('../models/NotificationModel')
 const AccountFaculty = require('../models/AccountFacultyModel')
+let name;
+Router.get('/thongbao',(req,res)=>{
+    Notification.find()
+    .then(p=>{
+        return res.json({code:0,message:'Lấy thành công',data:p})
+    })
+})
 Router.get('/',(req,res)=>{
     if(!req.session.user){
         return res.redirect('/')
@@ -35,19 +42,27 @@ Router.get('/',(req,res)=>{
     AccountFaculty.findOne({email:req.session.user})
     .then(p=>{
         var temp =p.permission
+        name=p.name
         var array = temp.split(',')
         var a=[]
         for(var i=0;i<array.length;i++){
             a.push(data[array[i]])
         }
-        Notification.find().then(d=>{
-            res.render('khoa',{name:p.name,permission:a, tag:array, noti:d})
+        let perPage = 3
+        let page = req.params.page||1
+        Notification
+        .find()
+        .skip(perPage*page-perPage)
+        .limit(perPage)
+        .exec((err,notifications)=>{
+                Notification.countDocuments((err,count)=>{
+                    if(err)return next(err)
+                    res.render('khoa',{name:p.name,permission:a, tag:array, notifications:notifications,current:page,pages:Math.ceil(count/perPage)})
+                })
         })
         
-    })
-    
+    }) 
 })
-
 Router.post('/upload',(req,res)=>{
     let result=''
     req.on('data',d=>result+=d.toString())
@@ -59,13 +74,10 @@ Router.post('/upload',(req,res)=>{
             permission:data.permission
         })
         noti.save()
-        Notification.find()
-        .then(e=>{
-            console.log(e)
-        })
+        res.json({code:0,message:'Khong loi',data:noti._id})
     })
     console.log('da nhan anh')
-    res.json({code:0,message:'Khong loi'})
+    
 })
 
 module.exports = Router
