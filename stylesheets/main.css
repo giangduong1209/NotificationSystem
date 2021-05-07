@@ -150,12 +150,13 @@ footer{
     width: 100%;
     height: auto;
 }
-.news{
+.box .news{
     width: 71%;
     position: relative;
     left: 20%;
     margin-top: 5px;
-    border: 1px solid white;
+    border: 1px solid black;
+    display: flex;
 }
 .news .userInfor{
     display: flex;
@@ -167,4 +168,16 @@ footer{
 }
 .news .context{
     margin-left: auto;
+   
+}
+.news .context .but{
+    margin-bottom: 5px;
+}
+#offline-notification,#online-notification{
+    bottom: 20px;
+    right: 20px;
+    width: 20%;
+    opacity: 1;
+    position: absolute;
+
 }
