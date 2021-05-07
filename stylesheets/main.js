@@ -164,3 +164,9 @@ $('#btnUpload').click(e=>{
     }
 })
 
+// EDIT
+$('.edit').click(e=>{
+  let id = e.target.dataset.id
+  $('#confirm-edit-dialog').modal('show')
+
+})

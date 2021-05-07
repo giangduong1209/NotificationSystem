@@ -160,6 +160,7 @@ footer{
 }
 .news .userInfor{
     display: flex;
+    width:70%;
 }
 .news .userInfor img{
     width: 50px;
@@ -169,6 +170,7 @@ footer{
 .news .context{
     margin-left: auto;
    
+   
 }
 .news .context .but{
     margin-bottom: 5px;
@@ -177,7 +179,6 @@ footer{
     bottom: 20px;
     right: 20px;
     width: 20%;
-    opacity: 1;
     position: absolute;
 
 }

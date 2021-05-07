@@ -2,10 +2,11 @@ const express = require('express')
 const Router = express.Router()
 const parser = require('parser')
 const Notification = require('../models/NotificationModel')
+const ObjectID = require('mongodb').ObjectID;
 const AccountFaculty = require('../models/AccountFacultyModel')
 let name;
-Router.get('/thongbao',(req,res)=>{
-    Notification.find()
+Router.get('/thongbao/:id',(req,res)=>{
+    Notification.find({_id:ObjectID(id)})
     .then(p=>{
         return res.json({code:0,message:'Lấy thành công',data:p})
     })
@@ -48,19 +49,11 @@ Router.get('/',(req,res)=>{
         for(var i=0;i<array.length;i++){
             a.push(data[array[i]])
         }
-        let perPage = 3
-        let page = req.params.page||1
-        Notification
-        .find()
-        .skip(perPage*page-perPage)
-        .limit(perPage)
-        .exec((err,notifications)=>{
-                Notification.countDocuments((err,count)=>{
-                    if(err)return next(err)
-                    res.render('khoa',{name:p.name,permission:a, tag:array, notifications:notifications,current:page,pages:Math.ceil(count/perPage)})
-                })
-        })
-        
+        Notification.find({})
+        .then(p=>{
+            console.log("Khoa",p)
+            res.render('khoa',{name:p.name,permission:a, tag:array, notifications:p})
+        })    
     }) 
 })
 Router.post('/upload',(req,res)=>{
