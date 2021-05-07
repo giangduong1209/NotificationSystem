@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css">
     <script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
     <link rel="stylesheet" href="main.css">
-    <title>Document</title>
+    <title>KHOA <%=name%></title>
 </head>
 <body>
     <div class="wrapper">
@@ -35,7 +35,7 @@
             <div class="left col-lg-2">
                 <ul>
                     <li><a href=""><i class="fas fa-home"></i>&nbsp;&nbsp; Đổi mật khẩu</a></li>
-                    <li><a href=""><i class="far fa-id-card"></i>&nbsp;&nbsp; Đăng bài</a></li>
+                    <li id="post" role="button"><a><i class="far fa-id-card"></i>&nbsp;&nbsp; Đăng bài</a></li>
                     <li><a href=""><i class="fas fa-user"></i>&nbsp;&nbsp; Xem toàn bộ bài đăng</a></li>
                 </ul>
             </div>              
@@ -129,8 +129,9 @@
                                 <%noti.forEach(e=>{%>
                                 <div class="item">
                                     <div class="khoa"><%=e.permission%></div>
-                                    <div class="noidung"><%=e.context%></div>
+                                    
                                     <div class="title"><b>THÔNG BÁO: <%=e.title%></b></div>
+                                    <a href="/thongbao/<%=e._id.toString()%>">Xem chi tiết nội dung</a>
                                 </div>
                                 <%})%>
                             </li>
@@ -180,7 +181,7 @@
                 </form>
               </div>
             </div>
-          </div>
+        </div>
             <script src="main.js"></script>
 </body>
 </html>

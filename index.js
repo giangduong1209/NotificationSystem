@@ -6,8 +6,10 @@ const flash = require('express-flash')
 const session = require('express-session')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
+const ObjectID = require('mongodb').ObjectID;
 const AccountFaculty = require('./models/AccountFacultyModel')
 const AccountAdmin = require('./models/AccountAdminModel')
+const Notification = require('./models/NotificationModel')
 const mongoose = require('mongoose')
 const app = express()
 const KhoaRouter = require('./routers/khoa')
@@ -26,9 +28,7 @@ app.get('/', (req, res) =>{
     res.render('LoginForm')
 })
 
-app.get('/admin', (req,res) =>{
-    res.render('adminInterface')
-})
+
 
 app.get('/faculty', (req, res) =>{
     res.render('facultyInterface')
@@ -44,6 +44,27 @@ const validatorlogin = [
     .isLength({min: 6}).withMessage('Mật khẩu phải từ 6 ký tự'),
 ]
 
+app.get('/logout', (req, res) =>{
+    req.session.user = null
+    res.redirect("/")
+})
+
+app.get('/thongbao',(req,res)=>{
+    res.send('Trang thong bao')
+})
+app.get('/thongbao/:id',(req,res)=>{
+    let id=(req.params)
+    console.log(id.id)
+    Notification.find({_id: ObjectID(id.id)})
+    .then(p=>{
+        if(p){
+           res.render('detailnotification',{p:p[0]})
+        }else{
+            console.log('khong tim thay')
+        }
+    })
+    .catch(e=>console.log(e))
+})
 app.get('/admin', (req,res) =>{
     if(!req.session.user){
         return res.redirect('/')
