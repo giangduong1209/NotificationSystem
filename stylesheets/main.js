@@ -20,8 +20,8 @@ let socket
           },500)// đợi ẩn thông báo xanh và đổ ở dưới góc màn hìnhrồi cho nhập username
          
         })
-        // $("#online-notification").fadeTo(10,0)
-        // $("#offline-notification").fadeTo(10,0)
+        $("#online-notification").fadeTo(10,0)
+        $("#offline-notification").fadeTo(10,0)
         socket.on('disconnect',()=>console.log("đã mất kết nối đến server"))
         socket.on('error',()=>console.log("đã xảy ra lỗi: ",e.message))
         /*socket.on('message',(mess)=>{
@@ -32,29 +32,37 @@ let socket
         $('#btnUpload').click(e=>{
           var Title = $('#title').val()
           var chude = $('input[name="chude"]:checked').val()
-          txtContent =  CKEDITOR.instances['txtContent'].getData()
-          if(title===''||chude===''||txtContent===''){
+          var txtContent =  CKEDITOR.instances['txtContent'].getData()
+          if(Title===''||chude===''||txtContent===''){
               $('#error').removeAttr('style')
               $('#error').val("Vui lòng nhập đầy đủ thông tin")
           }else{
               let data ={
                   title:Title,
                   context:txtContent,
-                  permission:chude
+                  permission:chude,
+                  name:$('#name').text()
               }
+              // console.log(data)
               fetch('http://localhost:8080/khoa/upload',{method:'POST',body: JSON.stringify(data)})
               .then(res=>res.json())
               .then(json=>{
-                  console.log(json)
+                if(json.code===0){
+                  title=''
+                  chude=''
+                  txtContent=''
                   socket.emit('notify',json.data)
-                  $('#title').val('')
-                  $('#chude').removeAttr('checked')
-                  CKEDITOR.instances['txtContent'].setData('')
                   $('#confirm-post-dialog').modal('hide')
+                }
+                 else{
+                  $('#error').removeAttr('style')
+                  $('#error').text('')
+                  $('#error').text("Đăng bài thất bại")
+                 }
               })
               .catch(e=>console.log(e))
           }
-        })
+      })
         // danh sách người đã vào web nhận từ server 
         socket.on("list-users",(m)=>{
           console.log(" đã nhận danh sách user online từ server",m)
@@ -111,7 +119,6 @@ $('.menu-toggle').click(e=>{
     }  
 })
 $('#post').click(e=>{
-    console.log('ok')
     $('#confirm-post-dialog').modal('show')
 })
 
@@ -136,37 +143,92 @@ function notifyOnline(s){
       $('#offline-notification').fadeTo(2000,0)// hide
     },4000)
   }
-CKEDITOR.replace('txtContent')
-$('#btnUpload').click(e=>{
-    var Title = $('#title').val()
-    var chude = $('input[name="chude"]:checked').val()
-    txtContent =  CKEDITOR.instances['txtContent'].getData()
-    if(title===''||chude===''||txtContent===''){
-        $('#error').removeAttr('style')
-        $('#error').val("Vui lòng nhập đầy đủ thông tin")
-    }else{
-        let data ={
-            title:Title,
-            context:txtContent,
-            permission:chude
-        }
-        // console.log(data)
-        fetch('http://localhost:8080/khoa/upload',{method:'POST',body: JSON.stringify(data)})
-        .then(res=>res.json())
-        .then(json=>{
-            console.log(json)
-            title=''
-            chude=''
-            txtContent=''
-            $('#confirm-post-dialog').modal('hide')
-        })
-        .catch(e=>console.log(e))
-    }
-})
-
 // EDIT
-$('.edit').click(e=>{
-  let id = e.target.dataset.id
-  $('#confirm-edit-dialog').modal('show')
-
+$(document).ready(()=>{
+  $('.edit').click(e=>{
+    e.preventDefault()
+    let id =$(e.target).data('id');
+    $('.btnEdit').attr('data-id',id)
+    console.log(id)
+    fetch('http://localhost:8080/khoa/thongbao/',{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/x-www-form-urlencoded'
+    },
+    body:'id='+id
+    
+    })
+    .then(res=>res.json())
+    .then(json=>{
+      console.log(json)
+      let d=json.data
+      $('#titleE').val(d.title)
+      txtContent1 =  CKEDITOR.instances['txtContent1'].setData(d.context)
+    })
+    .catch(e=>console.log(e))
+    $('#confirm-edit-dialog').modal('show')
+    $('.btnEdit').click(e=>{
+      console.log('ok')
+      let idE =e.target.dataset.id;
+      let titleE = $('#titleE').val()
+      let chudeE = $('input[name="chudeE"]:checked').val()
+      let facutily = $('#name').text()
+      let txtContent1 =  CKEDITOR.instances['txtContent1'].getData()
+      let data ={
+        id:idE,
+        title:titleE,
+        permission:chudeE,
+        context:txtContent1,
+        faculity:facutily
+      }
+      console.log('data gui: ',data)
+      if(titleE===''||chudeE===''||txtContent1===''){
+        console.log('loi')
+        $('#errorE').removeAttr('style')
+        // $('#errorE').text("Vui lòng nhập đầy đủ thông tin")
+    }else{
+      fetch('http://localhost:8080/khoa/thongbao/edit',{
+        method:'POST',
+      body:JSON.stringify(data)
+      })
+      .then(res=>res.json())
+      .then(json=>{
+        if(json.code === 1){
+          $('#confirm-edit-dialog').modal('hide')
+        }else{
+          $('#errorE').removeAttr('style')
+          $('#errorE').text("")
+          $('#errorE').text(json.message)
+        }
+      })
+      .catch(e=>console.log(e))
+    }   
+    })
+    })
+  
+  $('.del').click(e=>{
+    e.preventDefault()
+    let id =$(e.target).data('id');
+    console.log(id)
+    $('#btn-delete-confirmed').attr('data-id',id)
+    $('#confirm-delete-dialog').modal('show')
+  })
+    $('#btn-delete-confirmed').click(e=>{
+      let id = e.target.dataset.id
+      fetch('http://localhost:8080/khoa/thongbao/delete/'+id,{method:'POST'})
+      .then(res=>res.json())
+      .then(json => {
+        if(json.code === 0){
+          $('#confirm-delete-dialog').modal('hide')
+          window.location.reload()
+          console.log(json.message)
+        }else{
+          $('#errorD').removeAttr('style')
+          $('#errorD').text("")
+          $('#errorD').text(json.message)
+        }
+      
+      })
+      .catch(e=>console.log(e))
+  })
 })

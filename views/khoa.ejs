@@ -35,7 +35,7 @@
         <div id="container">
             <div class="left col-lg-2">
                 <ul>
-                    <li><a href=""><i class="fas fa-home"></i>&nbsp;&nbsp; Đổi mật khẩu</a></li>
+                    <li><a role="button" href="/edit"><i class="fas fa-home"></i>&nbsp;&nbsp; Đổi mật khẩu</a></li>
                     <li id="post" role="button"><a><i class="far fa-id-card"></i>&nbsp;&nbsp; Đăng bài</a></li>
                     <li><a href="/allthongbao/1"><i class="fas fa-user"></i>&nbsp;&nbsp; Xem toàn bộ bài đăng</a></li>
                 </ul>
@@ -66,8 +66,8 @@
                                         <div class="context">
                                             <a href="/thongbao/<%=e._id.toString()%>">Xem chi tiết</a>
                                             <div class="but">
-                                                <button class="edit" data-id="<%=e._id.toString()%>" type="button" class="btn btn-danger"> Sửa</button>
-                                                <button class="del" data-id="<%=e._id.toString()%>"  type="button" class="btn btn-primary">Xoá</button>   
+                                                <button data-id="<%=e._id.toString()%>" type="button" class="btn btn-danger edit"> Sửa</button>
+                                                <button data-id="<%=e._id.toString()%>"  type="button" class="btn btn-primary del">Xoá</button>   
                                             </div>
                                         </div>  
                                     </div>
@@ -78,16 +78,26 @@
                         </div>
                         <div class="notify col-md-2">
                            <h3>Thông báo mới</h3>
-                           <a href="#">Xem tất cả</a>
+                           <a href="/allthongbao/1">Xem tất cả</a>
                            <ul class="list-group">
                             <li class="list-group-item list-group-item-success">
-                                <%notifications.forEach(e=>{%>
-                                <div class="item">
-                                    <div class="khoa"><%=e.permission%></div>
-                                    <div class="title"><b>THÔNG BÁO: <%=e.title%></b></div>
-                                    <a href="/thongbao/<%=e._id.toString()%>">Xem chi tiết nội dung</a>
-                                </div>
-                                <%})%>
+                                <%if(notifications.length>6){%>
+                                    <%for(var i=notifications.length-1;i>notifications.length-6;i--){%>
+                                    <div class="item">
+                                        <div class="khoa"><%=notifications[i].permission%></div>
+                                        <div class="title"><b>THÔNG BÁO: <%=notifications[i].title%></b></div>
+                                        <a href="/thongbao/<%=notifications[i].toString()%>">Xem chi tiết nội dung</a>
+                                    </div>
+                                    <%}%>
+                                <%}else{%>
+                                    <%for(var i=0;i<notifications.length;i++){%>
+                                    <div class="item">
+                                        <div class="khoa"><%=notifications[i].permission%></div>
+                                        <div class="title"><b>THÔNG BÁO: <%=notifications[i].title%></b></div>
+                                        <a href="/thongbao/<%=notifications[i].toString()%>">Xem chi tiết nội dung</a>
+                                    </div>
+                                <%}%>
+                                <%}%>
                             </li>
                           </ul>
                         
@@ -96,7 +106,34 @@
                 </div>
             </div>
         </div>
-
+<!-- Confirm delete -->
+<div id="confirm-delete-dialog" class="modal fade">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Xóa thông báo</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="modal-body">
+          Bạn có chắc rằng muốn xóa thông báo?
+          <div style="display: none;" id="errorD" class="alert alert-danger">
+            Vui lòng nhập đầy đủ thông tin
+        </div>   
+        </div>
+        
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button id="btn-delete-confirmed" data-id="???" type="button" class="btn btn-danger">Xóa</button>
+          <button type="button" class="btn btn-dark" data-dismiss="modal">Đóng</button>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+<!-- End Confirm delete -->
         <div id="online-notification" class="alert alert-success d-inline position-fixed small" style="bottom: 20px; left: 20px">
             <strong>Trần Quang Trí</strong> 
           </div>
@@ -152,42 +189,46 @@
                 <!-- Modal Header -->
                 <div class="modal-header">
                   <h4 class="modal-title">Đăng Bài</h4>
-                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  <button type="button" class="closeEdit" data-dismiss="modal">&times;</button>
                 </div>
                 <form action="POST">
                             <!-- Modal body -->
                 <div  class="modal-body">
                     <div class="form-group">
                         <label for="title">Tiêu đề bài đăng</label>
-                        <input value="" class="form-control" type="text" placeholder="Nhập tên người dùng" id="title" name="title">
+                        <input value="" class="form-control" type="text" placeholder="Nhập tên người dùng" id="titleE" name="title">
                     </div>
                     <div class="form-group">
-                        <label for="chude">Chọn chuyên đề:</label>
+                        <label for="chudeE">Chọn chuyên đề:</label>
                         <%permission.forEach((e,index)=>{%>
                         <div class="custom-control custom-radio custom-control-inline">
-                            <input value="<%=tag[index]%>" type="radio" class="custom-control-input" id="chude" name="chude">
-                            <label class="custom-control-label" for="chude"><%=e%></label>
+                            <input value="<%=tag[index]%>" type="radio" class="custom-control-input" id="chudeE" name="chudeE">
+                            <label class="custom-control-label" for="chudeE"><%=e%></label>
                         </div>
                         <%})%>
                     </div>
                     <div class="form-group">
                         <label for="context">Nhập nội dung</label>
-                        <textarea name="txtContent" id="txtContent">Type some text here.</textarea>
+                        <textarea name="txtContent1" id="txtContent1">Type some text here.</textarea>
                     </div>
-                    <div style="display: none;" id="error" class="alert alert-danger">
+                    <div style="display: none;" id="errorE" class="alert alert-danger">
                         Vui lòng nhập đầy đủ thông tin
                     </div>          
             </div>
             <!-- Modal footer -->
             <div class="modal-footer">
-              <button id="btnEdit" data-id="???" type="button" class="btn btn-primary">Cập nhật</button>
+              <button data-id="???" type="button" class="btnEdit btn btn-primary">Cập nhật</button>
               <button type="button" class="btn btn-dark" data-dismiss="modal">Đóng</button>
             </div>
                 </form>
               </div>
             </div>
           </div>
-          <script>CKEDITOR.replace('txtContent')</script>
+          <script>
+          CKEDITOR.replace('txtContent')
+          CKEDITOR.replace('txtContent1')
+        
+        </script>
         </div>
             <script src="main.js"></script>
 </body>
