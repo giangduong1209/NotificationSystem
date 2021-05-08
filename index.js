@@ -14,6 +14,9 @@ const Notification = require('./models/NotificationModel')
 const mongoose = require('mongoose')
 const app = express()
 const KhoaRouter = require('./routers/khoa')
+const {OAuth2Client} = require('google-auth-library');
+const CLIENT_ID = '192862003971-e3ne3er14ijgit447n760d6vsbcrq6g2.apps.googleusercontent.com'
+const client = new OAuth2Client(CLIENT_ID);
 app.set('view engine','ejs')
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(express.json())
@@ -47,6 +50,7 @@ const validatorlogin = [
 
 app.get('/logout', (req, res) =>{
     req.session.user = null
+    res.clearCookie('session-token')
     res.redirect("/")
 })
 
@@ -135,6 +139,42 @@ app.get('/admin/create_account',(req,res) =>{
     res.render('register', {error, name, email, password})
 })
  
+app.post('/loginGG', (req, res) =>{
+    let token = req.body.token;
+    console.log(token)
+    async function verify() {
+        const ticket = await client.verifyIdToken({
+            idToken: token,
+            audience: CLIENT_ID
+        });
+        const payload = ticket.getPayload();
+        const userid = payload['sub'];
+        console.log(payload)
+        // If request specified a G Suite domain:
+        const domain = payload['hd'];
+        console.log(domain)
+      }
+      verify()
+      .then(() =>{
+        res.cookie('session-token', token)
+        res.send('success')
+      })
+      .catch(console.error);
+})
+
+
+app.get('/student',checkAuthentication, (req, res) =>{
+    let user = req.user;
+    if(user.hd == "student.tdtu.edu.vn"){
+        return res.render('studentInterface', { user });
+    }
+    else {
+        return res.redirect('/')
+    }
+    
+})
+
+
 
 
 const validator = [
@@ -226,12 +266,36 @@ app.post('/admin/create_account', validator, (req, res) =>{
     res.redirect('/admin')
    
 })
+
+function checkAuthentication(req, res, next){
+    let token = req.cookies['session-token'];
+    let user = {};
+    async function verify() {
+        const ticket = await client.verifyIdToken({
+            idToken: token,
+            audience: CLIENT_ID
+        });
+        const payload = ticket.getPayload();
+        user.name = payload.name;
+        user.hd = payload.hd
+    }
+    verify()
+    .then(() =>{
+        req.user = user;
+        next()
+    })
+    .catch(e =>{
+        res.redirect('/')
+    })
+}
+
+const port = process.env.PORT || 8080
+
 mongoose.connect('mongodb://localhost/accountfaculty', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 })
 .then(() =>{
-    const port = process.env.PORT || 8080
         const httpServer = app.listen(port,()=>console.log('http://localhost:'+port))
         const io = socketio(httpServer)
         io.on('connection',client=>{
