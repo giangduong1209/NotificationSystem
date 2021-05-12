@@ -33,9 +33,8 @@
     .btn_nav #btn_open{
         display: none;
     }
-
     
-  }
+}
 
 .sidebar{
     position: fixed;
