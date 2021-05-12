@@ -8,7 +8,8 @@ const AccountStudentSchema = new Schema({
         type: String,
         unique: true
     },
-    password: String,
+    class: String,
+    faculty: String,
     picture: String
 })
 

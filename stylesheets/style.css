@@ -287,5 +287,11 @@ body{
     margin-top: 10px;
     background-color: blue;
     border-radius: 10px;
+}
+.sidebar #update{
+    color: white;
+}
 
+#confirm-update-dialog .modal-dialog .modal-content .modal-body .ima #output{
+    width: 200px;
 }

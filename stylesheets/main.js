@@ -121,89 +121,122 @@ $('.menu-toggle').click(e=>{
 $('#post').click(e=>{
   $('#confirm-post-dialog').modal('show')
 })
-
-
+//Update Information Student
+$('#update').click(e=>{
+    console.log('ok')
+    $('#confirm-update-dialog').modal('show')
+})
+$('#btnStudentUpdate').click(e=>{
+  var nameStu = $('#nameStu').val()
+  var classStu = $('#class').val()
+  var facuStu = $('#facu').val()
+  console.log(nameStu)
+  console.log(classStu)
+  console.log(facuStu)
+  if(nameStu===''||classStu===''||facuStu===''){
+      $('#error').removeAttr('style')
+      $('#error').val("Vui lòng nhập đầy đủ thông tin")
+  }else{
+      let data ={
+          title:Title,
+          context:txtContent,
+          permission:chude
+      }
+      // console.log(data)
+      fetch('http://localhost:8080/khoa/upload',{method:'POST',body: JSON.stringify(data)})
+      .then(res=>res.json())
+      .then(json=>{
+          console.log(json)
+          title=''
+          chude=''
+          txtContent=''
+          $('#confirm-post-dialog').modal('hide')
+      })
+      .catch(e=>console.log(e))
+  }
+})
 
 function notifyOnline(s){
-  $("#online-notification strong").html(s)
-  $("#online-notification").fadeTo(2000,1)//show
-  setTimeout(()=>{
+$("#online-notification strong").html(s)
+$("#online-notification").fadeTo(2000,1)//show
+setTimeout(()=>{
     $('#online-notification').fadeTo(2000,0)// hide
-  },4000)
+},4000)
 }
 function remove(id){
-  $(`#${id}`).remove()
-  $("#online-count").html($('#user-list').length)// cập nhật lại số lượng sau khi xóa
+$(`#${id}`).remove()
+$("#online-count").html($('#user-list').length)// cập nhật lại số lượng sau khi xóa
 }
-
-function notifyOffline(username){
-  $("#offline-notification strong").html(username)
-  $("#offline-notification").fadeTo(2000,1)//show
-  setTimeout(()=>{
-    $('#offline-notification').fadeTo(2000,0)// hide
-  },4000)
-}
+  function notifyOffline(username){
+    $("#offline-notification strong").html(username)
+    $("#offline-notification").fadeTo(2000,1)//show
+    setTimeout(()=>{
+      $('#offline-notification').fadeTo(2000,0)// hide
+    },4000)
+  }
 // EDIT
 $(document).ready(()=>{
-    $('.edit').click(e=>{
-      e.preventDefault()
-      let id =$(e.target).data('id');
-      $('.btnEdit').attr('data-id',id)
-      console.log(id)
-      fetch('http://localhost:8080/khoa/thongbao/',{
+  //Hien thi thong tin de sua
+  $('.edit').click(e=>{
+    e.preventDefault()
+    let id =$(e.target).data('id');
+    $('.btnEdit').attr('data-id',id)
+    console.log(id)
+    fetch('http://localhost:8080/khoa/thongbao/',{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/x-www-form-urlencoded'
+    },
+    body:'id='+id  
+    })
+    .then(res=>res.json())
+    .then(json=>{
+      console.log(json)
+      let d=json.data
+      $('#titleE').val(d.title)
+      txtContent1 =  CKEDITOR.instances['txtContent1'].setData(d.context)
+    })
+    .catch(e=>console.log(e))
+    $('#confirm-edit-dialog').modal('show')
+  })
+  $('.btnEdit').click(e=>{
+    console.log('ok')
+    let idE =e.target.dataset.id;
+    let titleE = $('#titleE').val()
+    let chudeE = $('input[name="chudeE"]:checked').val()
+    console.log("Chu de: ",chudeE)
+    let facutily = $('#name').text()
+    let txtContent1 =  CKEDITOR.instances['txtContent1'].getData()
+    let data ={
+      id:idE,
+      title:titleE,
+      permission:chudeE,
+      context:txtContent1,
+      faculity:facutily
+    }
+    console.log('data gui: ',data)
+    if(titleE===''||chudeE===''||txtContent1===''){
+      console.log('loi')
+      $('#errorE').removeAttr('style')
+      $('#errorE').text("Vui lòng nhập đầy đủ thông tin")
+    }else{
+      fetch('http://localhost:8080/khoa/thongbao/edit',{
         method:'POST',
-        headers:{
-          'Content-Type':'application/x-www-form-urlencoded'
-      },
-      body:'id='+id
+      body:JSON.stringify(data)
       })
       .then(res=>res.json())
       .then(json=>{
-        console.log(json)
-        let d=json.data
-        $('#titleE').val(d.title)
-        txtContent1 =  CKEDITOR.instances['txtContent1'].setData(d.context)
+        if(json.code === 1){
+          $('#confirm-edit-dialog').modal('hide')
+        }else{
+          $('#errorE').removeAttr('style')
+          $('#errorE').text("")
+          $('#errorE').text(json.message)
+        }
       })
       .catch(e=>console.log(e))
-      $('#confirm-edit-dialog').modal('show')
-      $('.btnEdit').click(e=>{
-        console.log('ok')
-        let idE =e.target.dataset.id;
-        let titleE = $('#titleE').val()
-        let chudeE = $('input[name="chudeE"]:checked').val()
-        let facutily = $('#name').text()
-        let txtContent1 =  CKEDITOR.instances['txtContent1'].getData()
-        let data ={
-          id:idE,
-          title:titleE,
-          permission:chudeE,
-          context:txtContent1,
-          faculity:facutily
-        }
-        console.log('data gui: ',data)
-        if(titleE===''||chudeE===''||txtContent1===''){
-          console.log('loi')
-          $('#errorE').removeAttr('style')
-          $('#errorE').text("Vui lòng nhập đầy đủ thông tin")
-      }else{
-        fetch('http://localhost:8080/khoa/thongbao/edit',{
-          method:'POST',
-        body:JSON.stringify(data)
-        })
-        .then(res=>res.json())
-        .then(json=>{
-          if(json.code === 1){
-            $('#confirm-edit-dialog').modal('hide')
-          }else{
-            $('#errorE').removeAttr('style')
-            $('#errorE').text("")
-            $('#errorE').text(json.message)
-          }
-        })
-        .catch(e=>console.log(e))
-      }   
-      })
-      })
+    }   
+  })
       //DELETE
     $('.del').click(e=>{
       e.preventDefault()
@@ -230,15 +263,8 @@ $(document).ready(()=>{
       })
       .catch(e=>console.log(e))
   })
-  //LOAD NOTIFICATION
-  // fetch('http://localhost:8080/',{method:"POST",body:})
 })
 // EDIT
-// $('.edit').click(e=>{
-//   let id = e.target.dataset.id
-//   $('#confirm-edit-dialog').modal('show')
-// })
-
 function onSignIn(googleUser) {
   var id_token = googleUser.getAuthResponse().id_token;
   console.log(id_token)
@@ -308,3 +334,8 @@ if(oldPass==='' || newPass===''){
 }
 })
 
+var loadFile = function(event) {
+	var image = document.getElementById('output');
+	image.src = URL.createObjectURL(event.target.files[0]);
+  console.log(image.src)
+};

@@ -11,6 +11,7 @@ const ObjectID = require('mongodb').ObjectID;
 const AccountFaculty = require('./models/AccountFacultyModel')
 const AccountAdmin = require('./models/AccountAdminModel')
 const Notification = require('./models/NotificationModel')
+const AccountStudent = require('./models/AccountStudentModel')
 const mongoose = require('mongoose')
 const app = express()
 const KhoaRouter = require('./routers/khoa')
@@ -167,7 +168,16 @@ app.post('/loginGG', (req, res) =>{
 
 app.get('/student',checkAuthentication, (req, res) =>{
     let user = req.user;
+    console.log(user)
     if(user.hd == "student.tdtu.edu.vn"){
+        let stu = new AccountStudent({
+            name: user.name,
+            email: user.email,
+            class: "",
+            faculty: "",
+            picture: user.picture
+        })
+        stu.save()
         return res.render('studentInterface', { user });
     }
     else {
@@ -273,6 +283,8 @@ function checkAuthentication(req, res, next){
         });
         const payload = ticket.getPayload();
         user.name = payload.name;
+        user.email = payload.email;
+        user.picture = payload.picture;
         user.hd = payload.hd
     }
     verify()

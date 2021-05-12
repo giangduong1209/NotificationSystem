@@ -50,8 +50,7 @@ Router.post('/thongbao/edit',(req,res)=>{
     })
     req.on('end',()=>{
         let data = JSON.parse(result)
-        console.log('dulieu',result)
-        Notification.findByIdAndUpdate({_id:ObjectID(data.id)},{title:data.title,permission:data.permisson,context:data.context,facutily:data.facutily})
+        Notification.findByIdAndUpdate({_id:ObjectID(data.id)},{title:data.title,permission:data.permission,context:data.context,facutily:data.facutily})
         .then(p=>{
             if(p){
                 return res.json({code:1,message:'Sửa thành công'})
