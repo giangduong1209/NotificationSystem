@@ -167,34 +167,22 @@ app.post('/loginGG', (req, res) =>{
 app.get('/student',checkAuthentication, (req, res) =>{
     let user = req.user;
     console.log(user)
-    let id = ""
     if(user.hd == "student.tdtu.edu.vn"){
         let stu = new AccountStudent({
             name: user.name,
             email: user.email,
-            class: "",
+            clas: "",
             faculty: "",
             picture: user.picture
         })
         stu.save()
-        AccountStudent.findOneAndUpdate({email: user.email})
-        // AccountStudent.findOne({email: user.email})
-        // .then(acc =>{
-        //     if(!acc){
-        //         return res.json({code: 0, message: "Kkk"})
-        //     }
-        //     else{
-        //         id += acc._id
-        //         return id
-        //     }
-        // })
-
-
-        return res.render(`studentInterface`, { user });
+        
+        return res.render(`studentInterface`, { stu });
     }
     else {
         return res.redirect('/')
     }
+
 
 })
 
