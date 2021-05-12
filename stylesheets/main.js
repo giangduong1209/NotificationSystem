@@ -1,3 +1,4 @@
+
 let socket 
       let onlineUser=[]
       let username
@@ -131,21 +132,21 @@ $('#btnStudentUpdate').click(e=>{
       $('#error').val("Vui lòng nhập đầy đủ thông tin")
   }else{
       let data ={
-          title:Title,
-          context:txtContent,
-          permission:chude
+          name: nameStu,
+          class: classStu,
+          faculty: facuStu
       }
-      // console.log(data)
-      fetch('http://localhost:8080/khoa/upload',{method:'POST',body: JSON.stringify(data)})
-      .then(res=>res.json())
-      .then(json=>{
-          console.log(json)
-          title=''
-          chude=''
-          txtContent=''
-          $('#confirm-post-dialog').modal('hide')
-      })
-      .catch(e=>console.log(e))
+      console.log(data)
+      fetch('http://localhost:8080/student/update',{method:'POST',body: JSON.stringify(data)})
+        .then(res=>res.json())
+        .then(json=>{
+            console.log(json)
+            // title=''
+            // chude=''
+            // txtContent=''
+            $('#confirm-update-dialog').modal('hide')
+        })
+        .catch(e=>console.log(e)) 
   }
 })
 
