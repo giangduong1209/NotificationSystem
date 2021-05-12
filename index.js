@@ -15,6 +15,7 @@ const AccountStudent = require('./models/AccountStudentModel')
 const mongoose = require('mongoose')
 const app = express()
 const KhoaRouter = require('./routers/khoa')
+const StudentRouter = require('./routers/student')
 const {OAuth2Client} = require('google-auth-library');
 const CLIENT_ID = '192862003971-e3ne3er14ijgit447n760d6vsbcrq6g2.apps.googleusercontent.com'
 const client = new OAuth2Client(CLIENT_ID);
@@ -29,8 +30,12 @@ app.use(session({cookie: {maxAge: 60000}}))
 app.use(flash())
 
 app.use('/khoa',KhoaRouter)
+app.use('/student',StudentRouter)
 app.get('/', (req, res) =>{
-    res.render('LoginForm')
+    const error = req.flash('error') || ''
+    const email = req.flash('email') || ''
+    const password = req.flash('password') || ''
+    res.render('LoginForm', {error, email, password})
 })
 
 
@@ -140,7 +145,6 @@ app.get('/admin/create_account',(req,res) =>{
  
 app.post('/loginGG', (req, res) =>{
     let token = req.body.token;
-    console.log(token)
     async function verify() {
         const ticket = await client.verifyIdToken({
             idToken: token,
@@ -149,9 +153,7 @@ app.post('/loginGG', (req, res) =>{
         const payload = ticket.getPayload();
         const userid = payload['sub'];
         console.log(payload)
-        // If request specified a G Suite domain:
         const domain = payload['hd'];
-        console.log(domain)
       }
       verify()
       .then(() =>{
@@ -165,6 +167,7 @@ app.post('/loginGG', (req, res) =>{
 app.get('/student',checkAuthentication, (req, res) =>{
     let user = req.user;
     console.log(user)
+    let id = ""
     if(user.hd == "student.tdtu.edu.vn"){
         let stu = new AccountStudent({
             name: user.name,
@@ -174,18 +177,31 @@ app.get('/student',checkAuthentication, (req, res) =>{
             picture: user.picture
         })
         stu.save()
-        return res.render('studentInterface', { user });
+        AccountStudent.findOneAndUpdate({email: user.email})
+        // AccountStudent.findOne({email: user.email})
+        // .then(acc =>{
+        //     if(!acc){
+        //         return res.json({code: 0, message: "Kkk"})
+        //     }
+        //     else{
+        //         id += acc._id
+        //         return id
+        //     }
+        // })
+
+
+        return res.render(`studentInterface`, { user });
     }
     else {
         return res.redirect('/')
     }
-    
+
 })
 
 
 
 
-const validator = [
+const validatorRegis = [
     check('name').exists().withMessage('Vui lòng nhập tên của văn phòng/khoa')
     .notEmpty().withMessage('Không được để trống tên của văn phòng/khoa'),
 
@@ -238,7 +254,7 @@ app.get('/thongbao/:id',(req,res)=>{
     .catch(e=>console.log(e))
 
 })
-app.post('/admin/create_account', validator, (req, res) =>{
+app.post('/admin/create_account', validatorRegis, (req, res) =>{
     let result = validationResult(req);
     if (result.errors.length === 0){
         let {name, email, password, FAC} = req.body
