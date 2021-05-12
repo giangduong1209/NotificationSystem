@@ -31,7 +31,7 @@
             <i class="fa fa-bars" id="btn_open"></i>
             <i class="fa fa-bars" id="btn_close"></i>
         </label>
-        <div class="col-lg-3 sidebarright">
+        <div class="col-lg-2 sidebarright">
             <div class="sidebar">
                 <h3><%= user.name %></h3>
                 <ul>
@@ -41,13 +41,14 @@
                 </ul>
             </div>
         </div>
-        <div class="col-lg-9">
-            <div class="col-md-8">
+        <div class="col-lg-7">
+            <div class="col-md-7 offset-md-3">
                 <div class="block_timeline">
                     <li id="post"><input class="form-control-plaintext" type="text"  value="What's on your mind?" role="button"></li>
                     <div class="btn">
                         <button type="button" class="btn btn-danger"><i class="fa fa-video-camera" aria-hidden="true"> Video</i></button>
                         <button type="button" class="btn btn-primary"><i class="fa fa-picture-o" aria-hidden="true"> Photo</i></button>   
+                        <button type="button" class="btn btn-success"><i class="fa fa-picture-o" aria-hidden="true"> Đăng</i></button>   
                     </div>
                 </div>
                 
@@ -121,6 +122,11 @@
                     
                 </div>
             </div>
+        </div>
+        <div class=" col-lg-2 notification">
+                <div class="col-md-3 offset-md-3">
+                    A
+                </div>
         </div>
         <div id="confirm-post-dialog" class="modal fade">
             <div class="modal-dialog ">
