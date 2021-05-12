@@ -65,11 +65,11 @@ app.get('/thongbao',(req,res)=>{
 })
 app.get('/thongbao/:id',(req,res)=>{
     let id=(req.params)
-    console.log(id.id)
-    Notification.find({_id: ObjectID(id.id)})
+    Notification.findOne({_id: ObjectID(id.id)})
     .then(p=>{
         if(p){
-           res.render('detailnotification',{p:p[0]})
+            console.log(p)
+           res.render('detailnotification',{p:p})
         }else{
             console.log('khong tim thay')
         }
@@ -80,6 +80,8 @@ app.get('/admin', (req,res) =>{
     if(!req.session.user){
         return res.redirect('/')
     }
+    AccountFaculty.find({})
+    .then(p=>{console.log(p)})
     res.render('adminInterface')
 })
 app.post('/', validatorlogin, (req, res) =>{
@@ -266,6 +268,7 @@ app.post('/admin/create_account', validatorRegis, (req, res) =>{
                 name: name,
                 email: email,
                 password: hashed,
+                faculity:name,
                 permission: temp
             })
             return user.save()
