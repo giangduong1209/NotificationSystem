@@ -55,6 +55,10 @@ app.get('/logout', (req, res) =>{
 })
 
 app.get('/thongbao',(req,res)=>{
+    // Notification.find()
+    // .then(p=>{
+    //     if(p)=>{}
+    // })
     res.send('Trang thong bao')
 })
 app.get('/thongbao/:id',(req,res)=>{
@@ -62,7 +66,7 @@ app.get('/thongbao/:id',(req,res)=>{
     Notification.findOne({_id: ObjectID(id.id)})
     .then(p=>{
         if(p){
-            console.log(p)
+
            res.render('detailnotification',{p:p})
         }else{
             console.log('khong tim thay')
@@ -93,7 +97,6 @@ app.post('/', validatorlogin, (req, res) =>{
         else{
             AccountFaculty.findOne({email:email})
             .then( p=>{
-                console.log(p)
                 if(!p){
                     message ="Tài khoản không tồn tại"
                     req.flash('error', message)
@@ -138,7 +141,6 @@ app.get('/admin/create_account',(req,res) =>{
     const password = req.flash('password') || ''
     res.render('register', {error, name, email, password})
 })
- 
 app.post('/loginGG', (req, res) =>{
     let token = req.body.token;
     console.log(token)
@@ -173,10 +175,6 @@ app.get('/student',checkAuthentication, (req, res) =>{
     }
     
 })
-
-
-
-
 const validator = [
     check('name').exists().withMessage('Vui lòng nhập tên của văn phòng/khoa')
     .notEmpty().withMessage('Không được để trống tên của văn phòng/khoa'),
@@ -218,7 +216,6 @@ app.get('/allthongbao/:page',(req,res)=>{
 })
 app.get('/thongbao/:id',(req,res)=>{
     let id=(req.params)
-    console.log(id.id)
     Notification.find({_id: ObjectID(id.id)})
     .then(p=>{
         if(p){
@@ -248,7 +245,6 @@ app.post('/admin/create_account', validator, (req, res) =>{
             return user.save()
         })
     }
-
     else{
         result = result.mapped()
         let message;
@@ -294,6 +290,7 @@ const port = process.env.PORT || 8080
 mongoose.connect('mongodb://localhost/accountfaculty', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    useFindAndModify: false
 })
 .then(() =>{
         const httpServer = app.listen(port,()=>console.log('http://localhost:'+port))

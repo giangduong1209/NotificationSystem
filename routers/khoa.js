@@ -4,6 +4,7 @@ const parser = require('parser')
 const Notification = require('../models/NotificationModel')
 const ObjectID = require('mongodb').ObjectID;
 const AccountFaculty = require('../models/AccountFacultyModel')
+const bcrypt = require('bcrypt')
 let name;
 Router.post('/thongbao',(req,res)=>{
     let {id} = req.body
@@ -13,13 +14,42 @@ Router.post('/thongbao',(req,res)=>{
         return res.json({code:0,message:'Lấy thành công',data:p})
     })
 })
+Router.post('/EditPassword',(req,res)=>{
+    let result=''
+    req.on('data',d=> result += d.toString())
+    req.on('end',()=>{
+        let data = JSON.parse(result)
+        console.log(data.id)
+        AccountFaculty.findById({_id:ObjectID(data.id)})
+        .then(p=>{
+            if(!p){
+                return res.json({code:0,message:'Không tìm thấy tài khoản'})
+            }
+            let matched = bcrypt.compareSync(data.oldPassword,p.password)
+            if(!matched){
+                return res.json({code:0,message:'Mật khẩu cũ không đúng'})
+            }
+            AccountFaculty.findByIdAndUpdate({_id:ObjectID(data.id)},{password:bcrypt.hashSync(data.newPassword,10)})
+            .then(p=>{
+                if(!p){
+                    return res.json({code:0,message:'Đổi mật khẩu thất bại'})
+                }else{
+                    return res.json({code:1,message:'Đổi mật khẩu thành công'})
+                }
+            })
+           
+        })
+       
+    })
+   
+})
 Router.post('/thongbao/edit',(req,res)=>{
     let result=''
     req.on('data',d=>{
         result+=d.toString()
     })
     req.on('end',()=>{
-        data = JSON.parse(result)
+        let data = JSON.parse(result)
         console.log('dulieu',result)
         Notification.findByIdAndUpdate({_id:ObjectID(data.id)},{title:data.title,permission:data.permisson,context:data.context,facutily:data.facutily})
         .then(p=>{
@@ -86,6 +116,7 @@ Router.get('/',(req,res)=>{
     .then(p=>{
         var temp =p.permission
         var name=p.name
+        var id = p._id
         var array = temp.split(',')
         var a=[]
         for(var i=0;i<array.length;i++){
@@ -93,7 +124,7 @@ Router.get('/',(req,res)=>{
         }
         Notification.find({faculity:name})
         .then(p=>{
-            res.render('khoa',{name:name,permission:a, tag:array, notifications:p})
+            res.render('khoa',{id:id,name:name,permission:a, tag:array, notifications:p})
         })    
     }) 
 })

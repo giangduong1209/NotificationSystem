@@ -27,7 +27,7 @@
                 <ul class="nav navbar-nav navbar-right col-lg-2">
                     <li><a  class="navbar-brand" id="name" href="#"><%=name%></a></li>
                     <li><a class="navbar-brand" href="#">Trang Chủ</a></li>
-                    <li><a  class="navbar-brand" href="#">Sign Up</a></li>
+                    <li><a  class="navbar-brand" href="./logout">Đăng xuất</a></li>
                 </ul>
                 </div>
             </div>
@@ -35,7 +35,7 @@
         <div id="container">
             <div class="left col-lg-2">
                 <ul>
-                    <li><a role="button" href="/edit"><i class="fas fa-home"></i>&nbsp;&nbsp; Đổi mật khẩu</a></li>
+                    <li role="button" id="editPass"><a ><i class="fas fa-home"></i>&nbsp;&nbsp; Đổi mật khẩu</a></li>
                     <li id="post" role="button"><a><i class="far fa-id-card"></i>&nbsp;&nbsp; Đăng bài</a></li>
                     <li><a href="/allthongbao/1"><i class="fas fa-user"></i>&nbsp;&nbsp; Xem toàn bộ bài đăng</a></li>
                 </ul>
@@ -134,102 +134,140 @@
     </div>
   </div>
 <!-- End Confirm delete -->
-        <div id="online-notification" class="alert alert-success d-inline position-fixed small" style="bottom: 20px; left: 20px">
-            <strong>Trần Quang Trí</strong> 
+<div id="online-notification" class="alert alert-success d-inline position-fixed small" style="bottom: 20px; left: 20px">
+    <strong>Trần Quang Trí</strong> 
+</div>
+<div id="offline-notification" class="alert alert-danger d-inline position-fixed small" style="bottom: 20px; right: 20px">
+    <strong>Trần Quang Trí</strong> đã thoát khỏi ứng dụng
+</div>
+  <div id="confirm-post-dialog" class="modal fade">
+      <div class="modal-dialog ">
+        <div class="modal-content">
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title">Đăng Bài</h4>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
           </div>
-          <div id="offline-notification" class="alert alert-danger d-inline position-fixed small" style="bottom: 20px; right: 20px">
-            <strong>Trần Quang Trí</strong> đã thoát khỏi ứng dụng
-          </div>
-        <div id="confirm-post-dialog" class="modal fade">
-            <div class="modal-dialog ">
-              <div class="modal-content">
-                <!-- Modal Header -->
-                <div class="modal-header">
-                  <h4 class="modal-title">Đăng Bài</h4>
-                  <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
-                <form action="POST">
-                            <!-- Modal body -->
-                <div  class="modal-body">
-                    <div class="form-group">
-                        <label for="title">Tiêu đề bài đăng</label>
-                        <input value="" class="form-control" type="text" placeholder="Nhập tên người dùng" id="title" name="title">
-                    </div>
-                    <div class="form-group">
-                        <label for="chude">Chọn chuyên đề:</label>
-                        <%permission.forEach((e,index)=>{%>
-                        <div class="custom-control custom-radio custom-control-inline">
-                            <input value="<%=tag[index]%>" type="radio" class="custom-control-input" id="chude" name="chude">
-                            <label class="custom-control-label" for="chude"><%=e%></label>
-                        </div>
-                        <%})%>
-                    </div>
-                    <div class="form-group">
-                        <label for="context">Nhập nội dung</label>
-                        <textarea name="txtContent" id="txtContent">Type some text here.</textarea>
-                    </div>
-                    <div style="display: none;" id="error" class="alert alert-danger">
-                        Vui lòng nhập đầy đủ thông tin
-                    </div>          
-            </div>
-            <!-- Modal footer -->
-            <div class="modal-footer">
-              <button id="btnUpload" data-id="???" type="button" class="btn btn-primary">Cập nhật</button>
-              <button type="button" class="btn btn-dark" data-dismiss="modal">Đóng</button>
-            </div>
-                </form>
+          <form action="POST">
+                      <!-- Modal body -->
+          <div  class="modal-body">
+              <div class="form-group">
+                  <label for="title">Tiêu đề bài đăng</label>
+                  <input value="" class="form-control" type="text" placeholder="Nhập tên người dùng" id="title" name="title">
               </div>
-            </div>
-          </div>
-
- <!-- MODAL SUA -->
-        <div id="confirm-edit-dialog" class="modal fade">
-            <div class="modal-dialog ">
-              <div class="modal-content">
-                <!-- Modal Header -->
-                <div class="modal-header">
-                  <h4 class="modal-title">Đăng Bài</h4>
-                  <button type="button" class="closeEdit" data-dismiss="modal">&times;</button>
-                </div>
-                <form action="POST">
-                            <!-- Modal body -->
-                <div  class="modal-body">
-                    <div class="form-group">
-                        <label for="title">Tiêu đề bài đăng</label>
-                        <input value="" class="form-control" type="text" placeholder="Nhập tên người dùng" id="titleE" name="title">
-                    </div>
-                    <div class="form-group">
-                        <label for="chudeE">Chọn chuyên đề:</label>
-                        <%permission.forEach((e,index)=>{%>
-                        <div class="custom-control custom-radio custom-control-inline">
-                            <input value="<%=tag[index]%>" type="radio" class="custom-control-input" id="chudeE" name="chudeE">
-                            <label class="custom-control-label" for="chudeE"><%=e%></label>
-                        </div>
-                        <%})%>
-                    </div>
-                    <div class="form-group">
-                        <label for="context">Nhập nội dung</label>
-                        <textarea name="txtContent1" id="txtContent1">Type some text here.</textarea>
-                    </div>
-                    <div style="display: none;" id="errorE" class="alert alert-danger">
-                        Vui lòng nhập đầy đủ thông tin
-                    </div>          
-            </div>
-            <!-- Modal footer -->
-            <div class="modal-footer">
-              <button data-id="???" type="button" class="btnEdit btn btn-primary">Cập nhật</button>
-              <button type="button" class="btn btn-dark" data-dismiss="modal">Đóng</button>
-            </div>
-                </form>
+              <div class="form-group">
+                  <label for="chude">Chọn chuyên đề:</label>
+                  <%permission.forEach((e,index)=>{%>
+                  <div class="custom-control custom-radio custom-control-inline">
+                      <input value="<%=tag[index]%>" type="radio" class="custom-control-input" id="chude" name="chude">
+                      <label class="custom-control-label" for="chude"><%=e%></label>
+                  </div>
+                  <%})%>
               </div>
-            </div>
-          </div>
-          <script>
-          CKEDITOR.replace('txtContent')
-          CKEDITOR.replace('txtContent1')
-        
-        </script>
+              <div class="form-group">
+                  <label for="context">Nhập nội dung</label>
+                  <textarea name="txtContent" id="txtContent">Type some text here.</textarea>
+              </div>
+              <div style="display: none;" id="error" class="alert alert-danger">
+                  Vui lòng nhập đầy đủ thông tin
+              </div>          
+      </div>
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button id="btnUpload" data-id="???" type="button" class="btn btn-primary">Cập nhật</button>
+        <button type="button" class="btn btn-dark" data-dismiss="modal">Đóng</button>
+      </div>
+          </form>
         </div>
+      </div>
+    </div>
+ <!-- MODAL SUA -->
+<div id="confirm-edit-dialog" class="modal fade">
+  <div class="modal-dialog ">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Đăng Bài</h4>
+        <button type="button" class="closeEdit" data-dismiss="modal">&times;</button>
+      </div>
+      <form action="POST">
+                  <!-- Modal body -->
+      <div  class="modal-body">
+          <div class="form-group">
+              <label for="title">Tiêu đề bài đăng</label>
+              <input value="" class="form-control" type="text" placeholder="Nhập tên người dùng" id="titleE" name="title">
+          </div>
+          <div class="form-group">
+              <label for="chudeE">Chọn chuyên đề:</label>
+              <%permission.forEach((e,index)=>{%>
+              <div class="custom-control custom-radio custom-control-inline">
+                  <input value="<%=tag[index]%>" type="radio" class="custom-control-input" id="chudeE" name="chudeE">
+                  <label class="custom-control-label" for="chudeE"><%=e%></label>
+              </div>
+              <%})%>
+          </div>
+          <div class="form-group">
+              <label for="context">Nhập nội dung</label>
+              <textarea name="txtContent1" id="txtContent1">Type some text here.</textarea>
+          </div>
+          <div style="display: none;" id="errorE" class="alert alert-danger">
+              Vui lòng nhập đầy đủ thông tin
+          </div>          
+  </div>
+  <!-- Modal footer -->
+  <div class="modal-footer">
+    <button data-id="???" type="button" class="btnEdit btn btn-primary">Cập nhật</button>
+    <button type="button" class="btn btn-dark" data-dismiss="modal">Đóng</button>
+  </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- EDIT PASSWORD -->
+<div id="confirm-editPass-dialog" class="modal fade">
+  <div class="modal-dialog ">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Thay đổi mật khẩu</h4>
+        <button type="button" class="closeEdit" data-dismiss="modal">&times;</button>
+      </div>
+      <form action="POST">
+                  <!-- Modal body -->
+      <div  class="modal-body">
+          <div class="form-group">
+              <label for="context">Nhập mật khẩu cũ: </label>
+              <input class="form-control" name="oldPass" id="oldPass" placeholder="Nhập mật khẩu cũ ở đây" type="password">
+          </div>
+          <div class="form-group">
+              <label for="context">Nhập mật khẩu mới: </label>
+              <input class="form-control" name="newPass" id="newPass" placeholder="Nhập mật khẩu mới ở đây" type="password">
+          </div>
+          
+          <div style="display: none;" id="errorEP" class="alert alert-danger">
+              Vui lòng nhập đầy đủ thông tin
+          </div>          
+  </div>
+  <!-- Modal footer -->
+  <div class="modal-footer">
+    <button data-id="<%=id%>" type="button" class="btnEditP btn btn-primary">Cập nhật</button>
+    <button type="button" class="btn btn-dark" data-dismiss="modal">Đóng</button>
+  </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  <script>
+  CKEDITOR.replace('txtContent')
+  CKEDITOR.replace('txtContent1')
+
+</script>
+</div>
             <script src="main.js"></script>
 </body>
 </html>
