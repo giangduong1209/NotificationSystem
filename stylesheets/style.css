@@ -36,7 +36,6 @@ body{
     .btn_nav #btn_open{
         display: none;
     }
-
     
   }
 .row{
@@ -51,6 +50,8 @@ body{
     background-color: #002266;
     width: 100%;
 }
+}
+
 .sidebar{
     width: 14%;
     height: 100%;
