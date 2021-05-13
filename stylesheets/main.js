@@ -46,15 +46,17 @@ let username
               }
           })
           .catch(e=>console.log(e))
+        }
       }
-  })
+      )  
       // THONG BAO 
       socket.on('alertNoti',s=>{
         let m = s.message
         console.log(m)
         notifyOnline(m)
       })
-    }
+      
+  }
 var c = 0
 $('.menu-toggle').click(e=>{
   if(c%2==0){
@@ -107,6 +109,40 @@ $('#btnStudentUpdate').click(e=>{
         $('#confirm-update-dialog').modal('hide')
         .catch(e=>console.log(e)) 
   }
+})
+
+$('#btnStudentUpload').click(e =>{
+  var titlePost = $('#titleStu').val()
+  var txtContentPost =  CKEDITOR.instances['txtContentStu'].getData()
+  console.log(titlePost)
+  console.log(txtContentPost)
+  if(titlePost===''|| txtContentPost===''){
+      $('#error').removeAttr('style')
+      $('#error').val("Vui lòng nhập đầy đủ thông tin")
+  }else{
+      let dataPost ={
+          titlePost:titlePost,
+          contextPost:txtContentPost,
+      }
+      console.log(dataPost)
+      fetch('http://localhost:8080/student/upload',{method:'POST',body: JSON.stringify(dataPost)})
+      .then(res=>res.json())
+      .then(json=>{
+        if(json.code===0){
+          titlePost=''
+          contextPost=''
+      //     socket.emit('notify',json.data)
+      $('#confirm-postStu-dialog').modal('hide')
+      //     window.reload()
+        }
+          else{
+            $('#error').removeAttr('style')
+            $('#error').text('')
+            $('#error').text("Đăng bài thất bại")
+          }
+      })
+      .catch(e=>console.log(e))
+    }
 })
 
 function notifyOnline(s){
