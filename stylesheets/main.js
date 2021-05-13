@@ -74,7 +74,7 @@ $('#post').click(e=>{
 
 
 $('#postStu').click(e=>{
-  $('#confirm-poststu-dialog').modal('show')
+  $('#confirm-postStu-dialog').modal('show')
 })
 //Update Information Student
 $('#update').click(e=>{
@@ -85,11 +85,6 @@ $('#btnStudentUpdate').click(e=>{
   var classStu = $('#class').val()
   var facuStu = $('#facu').val()
   var emailStu = $('#emailStu').val()
-  console.log(nameStu)
-  console.log(classStu)
-  console.log(facuStu)
-  console.log(emailStu)
-  
   if(nameStu===''||classStu===''||facuStu===''){
       $('#error').removeAttr('style')
       $('#error').val("Vui lòng nhập đầy đủ thông tin")
@@ -100,7 +95,6 @@ $('#btnStudentUpdate').click(e=>{
           clas  : classStu,
           faculty: facuStu
       }
-      console.log(data)
       fetch('http://localhost:8080/student/update',{method:'POST',body: JSON.stringify(data)})
         .then(res=>res.json())
         .then(json=>{
@@ -299,26 +293,5 @@ var loadFile = function(event) {
   console.log(image.src)
 };
 
-function onSignIn(googleUser) {
-  var id_token = googleUser.getAuthResponse().id_token;
-  console.log(id_token)
-  var xhr = new XMLHttpRequest();
-  xhr.open('POST', '/loginGG');
-  xhr.setRequestHeader('Content-Type', 'application/json');
-  xhr.onload = function() {
-      if (xhr.responseText == 'success') {
-          signOut();
-          location.assign('/student')
-      }
-  };
-  xhr.send(JSON.stringify({
-      token: id_token
-  }));
-}
 
-function signOut() {
-  var auth2 = gapi.auth2.getAuthInstance();
-  auth2.signOut().then(function () {
-    console.log('User signed out.');
-  });
-}
+CKEDITOR.replace('txtContentStu')
