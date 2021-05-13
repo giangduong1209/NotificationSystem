@@ -70,12 +70,13 @@ footer{
     /* min-height: 60px; */
 }
 .left{
-    /* width: 15%; */
+    width: 15%;
     height:100%;
     background: #33485c;
 }
 .right{
-    height: 100%;
+    width: 80%;
+    /* height: 100%; */
 }
 .left ul{
  width: 100%;
@@ -83,7 +84,7 @@ footer{
 }
 .left ul li{
     width: 100%;
-    list-style-type: none
+    list-style-type: none;
 }
 .left ul li a{
     width: 100%;
@@ -182,3 +183,19 @@ footer{
     position: absolute;
 
 }
+@media only screen and (max-width: 1278px){
+.left{
+    display: none;
+}
+}
+@media only screen and (max-width: 1000px) {
+    .left{
+        width: 100%;
+        height: auto;
+        display: none;
+    }
+    .timeline{
+        width: 100%;
+    }
+    
+  }
