@@ -33,16 +33,14 @@
         </label>
         <div class="col-lg-2 sidebarright">
             <div class="sidebar">
-                <% if (locals.data) { %>
-                    <h3><%= data.name %></h3>
-                <!-- <% } else { %>
-                    <h3><%= stu.name %></h3> -->
-                <!-- <% } %> -->
+                <% if (stu) { %>
+                    <h3><%= stu.name %></h3>
+                <% } %>
                 
                 <ul>
                     <li><a href=""><i class="fas fa-home"></i>&nbsp;&nbsp; Trang chủ</a></li>
                     <li id="update" role="button"><a><i class="far fa-id-card"></i>&nbsp;&nbsp; Tài khoản</a></li>
-                    <li id="post" role="button"><a><i class="far fa-id-card"></i>&nbsp;&nbsp; Đăng bài</a></li>
+                    <li id="postStu" role="button"><a><i class="far fa-id-card"></i>&nbsp;&nbsp; Đăng bài</a></li>
                 </ul>
             </div>
         </div>
@@ -130,10 +128,9 @@
         </div>
         <div class=" col-lg-2 notification">
                 <div class="col-md-3 offset-md-3">
-                    A
                 </div>
         </div>
-        <div id="confirm-post-dialog" class="modal fade">
+        <div id="confirm-postStu-dialog" class="modal fade">
             <div class="modal-dialog ">
               <div class="modal-content">
                 <!-- Modal Header -->
@@ -146,11 +143,11 @@
                 <div  class="modal-body">
                     <div class="form-group">
                         <label for="title">Tiêu đề bài đăng</label>
-                        <input value="" class="form-control" type="text" placeholder="Nhập tên người dùng" id="title" name="title">
+                        <input value="" class="form-control" type="text" placeholder="Nhập tên người dùng" id="titleStu" name="titleStu">
                     </div>
                     <div class="form-group">
                         <label for="context">Nhập nội dung</label>
-                        <textarea name="txtContent" id="txtContent">Type some text here.</textarea>
+                        <textarea name="txtContentStu" id="txtContentStu">Type some text here.</textarea>
                     </div>
                     <div style="display: none;" id="error" class="alert alert-danger">
                         Vui lòng nhập đầy đủ thông tin
@@ -217,6 +214,5 @@
     
     <script src="main.js"></script>
         
-    
 </body>
 </html>
