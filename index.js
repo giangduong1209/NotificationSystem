@@ -176,7 +176,6 @@ app.get('/student',checkAuthentication, (req, res) =>{
             picture: user.picture
         })
         stu.save()
-        
         return res.render(`studentInterface`, { stu });
     }
     else {
