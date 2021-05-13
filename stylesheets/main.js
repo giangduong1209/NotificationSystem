@@ -6,6 +6,7 @@ let socket
         console.log("server  đã sẵn sàng hoạt dộng")
          socket= io()
         socket.on('connect',()=>{
+        
           console.log("đã kết nối socket thành công id= ",socket.id)
           setTimeout(()=>{
             username = sessionStorage.getItem("username")
@@ -117,35 +118,39 @@ $('#post').click(e=>{
 })
 //Update Information Student
 $('#update').click(e=>{
-    console.log('ok')
     $('#confirm-update-dialog').modal('show')
 })
 $('#btnStudentUpdate').click(e=>{
   var nameStu = $('#nameStu').val()
   var classStu = $('#class').val()
   var facuStu = $('#facu').val()
+  var emailStu = $('#emailStu').val()
   console.log(nameStu)
   console.log(classStu)
   console.log(facuStu)
+  console.log(emailStu)
+  
   if(nameStu===''||classStu===''||facuStu===''){
       $('#error').removeAttr('style')
       $('#error').val("Vui lòng nhập đầy đủ thông tin")
   }else{
       let data ={
+          emailStu: emailStu,
           name: nameStu,
-          class: classStu,
+          clas  : classStu,
           faculty: facuStu
       }
       console.log(data)
       fetch('http://localhost:8080/student/update',{method:'POST',body: JSON.stringify(data)})
         .then(res=>res.json())
         .then(json=>{
-            console.log(json)
-            // title=''
-            // chude=''
-            // txtContent=''
-            $('#confirm-update-dialog').modal('hide')
+            name =''
+            emailStu=''
+            clas ='' 
+            faculty=''
+            
         })
+        $('#confirm-update-dialog').modal('hide')
         .catch(e=>console.log(e)) 
   }
 })
@@ -204,32 +209,33 @@ $('.edit').click(e=>{
   $('#confirm-edit-dialog').modal('show')
 
 })
-function onSignIn(googleUser) {
-    var id_token = googleUser.getAuthResponse().id_token;
-    console.log(id_token)
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', '/loginGG');
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.onload = function() {
-        if (xhr.responseText == 'success') {
-            signOut();
-            location.assign('/student')
-        }
-    };
-    xhr.send(JSON.stringify({
-        token: id_token
-    }));
-}
-
-function signOut() {
-    var auth2 = gapi.auth2.getAuthInstance();
-    auth2.signOut().then(function () {
-      console.log('User signed out.');
-    });
-  }
 
 var loadFile = function(event) {
 	var image = document.getElementById('output');
 	image.src = URL.createObjectURL(event.target.files[0]);
   console.log(image.src)
 };
+
+function onSignIn(googleUser) {
+  var id_token = googleUser.getAuthResponse().id_token;
+  console.log(id_token)
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', '/loginGG');
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.onload = function() {
+      if (xhr.responseText == 'success') {
+          signOut();
+          location.assign('/student')
+      }
+  };
+  xhr.send(JSON.stringify({
+      token: id_token
+  }));
+}
+
+function signOut() {
+  var auth2 = gapi.auth2.getAuthInstance();
+  auth2.signOut().then(function () {
+    console.log('User signed out.');
+  });
+}
