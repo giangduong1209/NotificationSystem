@@ -6,6 +6,7 @@ const Notification = require('../models/NotificationModel')
 const ContentPost = require('../models/ContentModel')
 const { htmlToText } = require('html-to-text');
 const ObjectID = require('mongodb').ObjectID;
+const htmlToText = require('html-to-text')
 const app = express()
 app.set('view engine','ejs')
 Router.post('/update',(req,res)=>{
