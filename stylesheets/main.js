@@ -96,7 +96,7 @@ $('#btnStudentUpdate').click(e=>{
           clas  : classStu,
           faculty: facuStu
       }
-      fetch('http://localhost:8080/student/update',{method:'POST',body: JSON.stringify(data)})
+      fetch('student/update',{method:'POST',body: JSON.stringify(data)})
         .then(res=>res.json())
         .then(json=>{
             name =''
@@ -114,7 +114,9 @@ $('#btnStudentUpload').click(e =>{
   var email = $('#emailStun').val()
   var titlePost = $('#titleStu').val()
   var txtContentPost =  CKEDITOR.instances['txtContentStu'].getData()
-
+  var textContentPost = CKEDITOR.instances['txtContentStu'].setData(txtContentPost)
+  console.log(txtContentPost)
+  console.log(textContentPost)
   if(titlePost===''|| txtContentPost===''){
       $('#error').removeAttr('style')
       $('#error').val("Vui lòng nhập đầy đủ thông tin")
@@ -125,7 +127,7 @@ $('#btnStudentUpload').click(e =>{
           contextPost:txtContentPost,
       }
       console.log(dataPost)
-      fetch('http://localhost:8080/student/upload',{method:'POST',body: JSON.stringify(dataPost)})
+      fetch('/student/upload',{method:'POST',body: JSON.stringify(dataPost)})
       .then(res=>res.json())
       .then(json=>{
         if(json.code===0){
