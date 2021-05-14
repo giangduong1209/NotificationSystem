@@ -42,6 +42,7 @@
                     <li><a href=""><i class="fas fa-home"></i>&nbsp;&nbsp; Trang chủ</a></li>
                     <li id="update" role="button"><a><i class="far fa-id-card"></i>&nbsp;&nbsp; Tài khoản</a></li>
                     <li id="postStu" role="button"><a><i class="far fa-id-card"></i>&nbsp;&nbsp; Đăng bài</a></li>
+                    <li id="seenPost" role="button"><a href="student/allpost"><i class="far fa-id-card"></i>&nbsp;&nbsp; Xem toàn bộ bài đăng</a></li>
                 </ul>
             </div>
         </div>
@@ -99,14 +100,10 @@
                   <h4 class="modal-title">Đăng Bài</h4>
                   <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
-                <form action="POST">
+                <form action="POST" >
                             <!-- Modal body -->
                     
                 <div  class="modal-body">
-                    <div class="form-group">
-                        <label for="emailStu">Email</label>
-                        <input disabled value='<%= emailStun %>' class="form-control" type="text" placeholder="<%= emailStun %>" id="emailStun" name="emailStun">
-                    </div>
                     <div class="form-group">
                         <label for="emailStu">Email</label>
                         <input disabled value='<%= emailStun %>' class="form-control" type="text" placeholder="<%= emailStun %>" id="emailStun" name="emailStun">
@@ -117,8 +114,12 @@
                     </div>
                     <div class="form-group">
                         <label for="context">Nhập nội dung</label>
-                        <textarea name="txtContentStu" id="txtContentStu">Type some text here.</textarea>
+                        <textarea name="txtContentStu" id="txtContentStu"></textarea>
                     </div>
+                    <div class="form-group">
+                        <label for="exampleFormControlFile1">Chọn ảnh</label>
+                        <input type="file" class="form-control-file" id="exampleFormControlFile1">
+                      </div>
                     <div style="display: none;" id="error" class="alert alert-danger">
                         Vui lòng nhập đầy đủ thông tin
                     </div>          
