@@ -1,7 +1,7 @@
 const { urlencoded } = require('express')
 const express = require('express')
 const {check, validationResult} = require('express-validator')
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs')
 const flash = require('express-flash')
 const session = require('express-session')
 const cookieParser = require('cookie-parser')
@@ -193,8 +193,11 @@ app.get('/student',checkAuthentication, (req, res) =>{
         //     }
         // })
 
-
-        return res.render(`studentInterface`, { user });
+        Notification.find()
+        .then(p=>{
+            return res.render(`studentInterface`, { user,notifications:p });
+        })
+       
     }
     else {
         return res.redirect('/')

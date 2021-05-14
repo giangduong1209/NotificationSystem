@@ -11,6 +11,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -44,15 +45,13 @@
         <div class="col-lg-7">
             <div class="col-md-7 offset-md-3">
                 <div class="block_timeline">
-                    <li id="post"><input class="form-control-plaintext" type="text"  value="What's on your mind?" role="button"></li>
+                    <li role="button" id="post"><input class="form-control-plaintext" type="text"  value="What's on your mind?" role="button"></li>
                     <div class="btn">
                         <button type="button" class="btn btn-danger"><i class="fa fa-video-camera" aria-hidden="true"> Video</i></button>
                         <button type="button" class="btn btn-primary"><i class="fa fa-picture-o" aria-hidden="true"> Photo</i></button>   
                         <button type="button" class="btn btn-success"><i class="fa fa-picture-o" aria-hidden="true"> Đăng</i></button>   
                     </div>
-                </div>
-                
-                    
+                </div>  
                 <div class="box">
                     <div class="col-md-12">
                         <div class="userInfor">
@@ -124,9 +123,30 @@
             </div>
         </div>
         <div class=" col-lg-2 notification">
-                <div class="col-md-3 offset-md-3">
-                    A
-                </div>
+                    <h3>Thông báo mới</h3>
+                    <a href="/allthongbao/1">Xem tất cả</a>
+                    <ul class="list-group">
+                     <li class="list-group-item list-group-item-success">
+                         <%if(notifications.length>6){%>
+                             <%for(var i=notifications.length-1;i>notifications.length-6;i--){%>
+                             <div class="item">
+                                 <div class="khoa"><%=notifications[i].permission%></div>
+                                 <div class="title"><b>THÔNG BÁO: <%=notifications[i].title%></b></div>
+                                 <a href="/thongbao/<%=(notifications[i]._id).toString()%>">Xem chi tiết nội dung</a>
+                             </div>
+                             <%}%>
+                         <%}else{%>
+                             <%for(var i=0;i<notifications.length;i++){%>
+                             <div class="item">
+                                 <div class="khoa">KHOA:<%=notifications[i].permission%></div>
+                                 <div class="title"><b>THÔNG BÁO: <%=notifications[i].title%></b></div>
+                                 <a href="/thongbao/<%=(notifications[i]._id).toString()%>">Xem chi tiết nội dung</a>
+                             </div>
+                         <%}%>
+                         <%}%>
+                     </li>
+                   </ul>
+                 </div>
         </div>
         <div id="confirm-post-dialog" class="modal fade">
             <div class="modal-dialog ">
@@ -140,12 +160,14 @@
                             <!-- Modal body -->
                 <div  class="modal-body">
                     <div class="form-group">
-                        <label for="title">Tiêu đề bài đăng</label>
-                        <input value="" class="form-control" type="text" placeholder="Nhập tên người dùng" id="title" name="title">
+                        <label for="context">Nhập nội dung</label>
+                        <textarea name="txtContent2" id="txtContent2">Type some text here.</textarea>
                     </div>
                     <div class="form-group">
-                        <label for="context">Nhập nội dung</label>
-                        <textarea name="txtContent" id="txtContent">Type some text here.</textarea>
+                        <button type="button" class="btn btn-danger"><i class="fa fa-video-camera" aria-hidden="true"> Video</i></button>
+                    </div>
+                    <div class="form-group">
+                        <button type="button" class="btn btn-primary"><i class="fa fa-picture-o" aria-hidden="true"> Photo</i></button>   
                     </div>
                     <div style="display: none;" id="error" class="alert alert-danger">
                         Vui lòng nhập đầy đủ thông tin
@@ -160,7 +182,7 @@
               </div>
             </div>
         </div>
-
+<!-- UPDATE -->
         <div id="confirm-update-dialog" class="modal fade">
             <div class="modal-dialog ">
               <div class="modal-content">
@@ -202,12 +224,10 @@
               </div>
             </div>
         </div>
-        
-        
+        <!-- END UPDATE -->  
     </div>
-    
     <script src="main.js"></script>
-        
+    <script>CKEDITOR.replace('txtContent2')</script>
     
 </body>
 </html>
