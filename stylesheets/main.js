@@ -47,8 +47,7 @@ let username
           })
           .catch(e=>console.log(e))
         }
-      }
-      )  
+      })
       // THONG BAO 
       socket.on('alertNoti',s=>{
         let m = s.message
@@ -112,15 +111,16 @@ $('#btnStudentUpdate').click(e=>{
 })
 
 $('#btnStudentUpload').click(e =>{
+  var email = $('#emailStun').val()
   var titlePost = $('#titleStu').val()
   var txtContentPost =  CKEDITOR.instances['txtContentStu'].getData()
-  console.log(titlePost)
-  console.log(txtContentPost)
+
   if(titlePost===''|| txtContentPost===''){
       $('#error').removeAttr('style')
       $('#error').val("Vui lòng nhập đầy đủ thông tin")
-  }else{
+  }else{ 
       let dataPost ={
+          email: email,
           titlePost:titlePost,
           contextPost:txtContentPost,
       }
@@ -129,10 +129,11 @@ $('#btnStudentUpload').click(e =>{
       .then(res=>res.json())
       .then(json=>{
         if(json.code===0){
+          email=''
           titlePost=''
           contextPost=''
       //     socket.emit('notify',json.data)
-      $('#confirm-postStu-dialog').modal('hide')
+          $('#confirm-postStu-dialog').modal('hide')
       //     window.reload()
         }
           else{
@@ -143,7 +144,7 @@ $('#btnStudentUpload').click(e =>{
       })
       .catch(e=>console.log(e))
     }
-})
+})  
 
 function notifyOnline(s){
 $("#online-notification strong").html(s)
@@ -256,14 +257,13 @@ $(document).ready(()=>{
 // EDIT
 function onSignIn(googleUser) {
   var id_token = googleUser.getAuthResponse().id_token;
-  console.log(id_token)
   var xhr = new XMLHttpRequest();
   xhr.open('POST', '/loginGG');
   xhr.setRequestHeader('Content-Type', 'application/json');
   xhr.onload = function() {
       if (xhr.responseText == 'success') {
           signOut();
-          location.assign('/student')
+          location.assign('/stu')
       }
   };
   xhr.send(JSON.stringify({
@@ -328,6 +328,7 @@ var loadFile = function(event) {
 	image.src = URL.createObjectURL(event.target.files[0]);
   console.log(image.src)
 };
+
 
 
 CKEDITOR.replace('txtContentStu')

@@ -35,6 +35,7 @@ Router.post('/upload',(req,res) =>{
         dataPost = JSON.parse(result)
         console.log(dataPost)
         let contPost = new ContentPost({
+            email: dataPost.email,
             titlePost: dataPost.titlePost,
             contextPost: dataPost.contextPost,
         })
@@ -44,7 +45,22 @@ Router.post('/upload',(req,res) =>{
     console.log('Da Nhan')
 })
 
+Router.get('/', (req, res) =>{
+    let emailStu = req.session.user
+    AccountStudent.findOne({email: emailStu})
+    .then(p =>{
+        var nameSt = p.name;
+        var emailSt = p.email;
+        ContentPost.find({email: emailStu})
+        .then(p =>{
+            p = p.reverse()
+            res.render('studentInterface', {nameStun: nameSt, emailStun: emailSt, postS: p})    
+        })
+        
+    })
+    
 
+})
 
 module.exports = Router
 
