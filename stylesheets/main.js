@@ -114,20 +114,17 @@ $('#btnStudentUpload').click(e =>{
   var email = $('#emailStun').val()
   var titlePost = $('#titleStu').val()
   var txtContentPost =  CKEDITOR.instances['txtContentStu'].getData()
-  var textContentPost = CKEDITOR.instances['txtContentStu'].setData(txtContentPost)
-  console.log(txtContentPost)
-  console.log(textContentPost)
-  if(titlePost===''|| txtContentPost===''){
+  var textContentPost = txtContentPost.replace(/<[^>]*>?/gm, '')
+  if(titlePost===''|| textContentPost===''){
       $('#error').removeAttr('style')
       $('#error').val("Vui lòng nhập đầy đủ thông tin")
   }else{ 
       let dataPost ={
           email: email,
           titlePost:titlePost,
-          contextPost:txtContentPost,
+          contextPost:textContentPost,
       }
-      console.log(dataPost)
-      fetch('/student/upload',{method:'POST',body: JSON.stringify(dataPost)})
+      fetch('/student/upload',{method:'POST' ,body: JSON.stringify(dataPost)})
       .then(res=>res.json())
       .then(json=>{
         if(json.code===0){
