@@ -262,12 +262,12 @@ body{
 
 .box{
     margin-top: 20px;
-    background-color: white;
     border-radius: 10px 10px;
     position: relative;
 }
 
 #formPost{
+    border: 1px solid black;
     background-color: white;
     margin-top: 20px;
     text-align: center;
@@ -283,7 +283,7 @@ body{
     color: white;
 }
 .notification{
-    height: auto;
+    height: fit-content;
     margin-top: 10px;
     background-color: blue;
     border-radius: 10px;
@@ -293,7 +293,11 @@ body{
 }
 
 
-
+.contentBox{
+    margin-top: 10px;
+    background-color: white;
+    border: 1px solid black;
+}
 #confirm-update-dialog .modal-dialog .modal-content .modal-body .ima #output{
     width: 200px;
 }
