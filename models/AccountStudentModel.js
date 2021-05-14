@@ -8,7 +8,7 @@ const AccountStudentSchema = new Schema({
         type: String,
         unique: true
     },
-    class: String,
+    clas: String,
     faculty: String,
     picture: String
 })

@@ -17,6 +17,7 @@ const app = express()
 const KhoaRouter = require('./routers/khoa')
 const StudentRouter = require('./routers/student')
 const {OAuth2Client} = require('google-auth-library');
+const ContentPost = require('./models/ContentModel')
 const CLIENT_ID = '192862003971-e3ne3er14ijgit447n760d6vsbcrq6g2.apps.googleusercontent.com'
 const client = new OAuth2Client(CLIENT_ID);
 app.set('view engine','ejs')
@@ -36,6 +37,7 @@ app.get('/', (req, res) =>{
     const email = req.flash('email') || ''
     const password = req.flash('password') || ''
     res.render('LoginForm', {error, email, password})
+
 })
 
 
@@ -168,15 +170,14 @@ app.post('/loginGG', (req, res) =>{
 })
 
 
-app.get('/student',checkAuthentication, (req, res) =>{
+app.get('/stu',checkAuthentication, (req, res) =>{
     let user = req.user;
-    console.log(user)
-    let id = ""
+    req.session.user = user.email
     if(user.hd == "student.tdtu.edu.vn"){
         let stu = new AccountStudent({
             name: user.name,
             email: user.email,
-            class: "",
+            clas: "",
             faculty: "",
             picture: user.picture
         })
@@ -198,10 +199,13 @@ app.get('/student',checkAuthentication, (req, res) =>{
             return res.render(`studentInterface`, { user,notifications:p });
         })
        
+
+        return res.redirect('student'); 
     }
     else {
         return res.redirect('/')
     }
+
 
 })
 
@@ -315,7 +319,7 @@ function checkAuthentication(req, res, next){
     .catch(e =>{
         res.redirect('/')
     })
-}
+  }
 
 const port = process.env.PORT || 8080
 

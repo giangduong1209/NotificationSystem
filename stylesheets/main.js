@@ -1,4 +1,5 @@
 let socket 
+
 let onlineUser=[]
 let username
   window.onload=()=>{
@@ -44,15 +45,16 @@ let username
               }
           })
           .catch(e=>console.log(e))
-      }
-  })
+        }
+      })
       // THONG BAO 
       socket.on('alertNoti',s=>{
         let m = s.message
         console.log(m)
         notifyOnline(m)
       })
-    }
+      
+  }
 var c = 0
 $('.menu-toggle').click(e=>{
   if(c%2==0){
@@ -69,40 +71,81 @@ $('.menu-toggle').click(e=>{
 $('#post').click(e=>{
   $('#confirm-post-dialog').modal('show')
 })
+
+
+$('#postStu').click(e=>{
+  $('#confirm-postStu-dialog').modal('show')
+})
 //Update Information Student
 $('#update').click(e=>{
-    console.log('ok')
     $('#confirm-update-dialog').modal('show')
 })
 $('#btnStudentUpdate').click(e=>{
   var nameStu = $('#nameStu').val()
   var classStu = $('#class').val()
   var facuStu = $('#facu').val()
-  console.log(nameStu)
-  console.log(classStu)
-  console.log(facuStu)
+  var emailStu = $('#emailStu').val()
   if(nameStu===''||classStu===''||facuStu===''){
       $('#error').removeAttr('style')
       $('#error').val("Vui lòng nhập đầy đủ thông tin")
   }else{
       let data ={
+          emailStu: emailStu,
           name: nameStu,
-          class: classStu,
+          clas  : classStu,
           faculty: facuStu
       }
-      console.log(data)
-      fetch('/student/update',{method:'POST',body: JSON.stringify(data)})
+      fetch('student/update',{method:'POST',body: JSON.stringify(data)})
         .then(res=>res.json())
         .then(json=>{
-            console.log(json)
-            // title=''
-            // chude=''
-            // txtContent=''
-            $('#confirm-update-dialog').modal('hide')
+            name =''
+            emailStu=''
+            clas ='' 
+            faculty=''
+            
         })
+        $('#confirm-update-dialog').modal('hide')
         .catch(e=>console.log(e)) 
   }
 })
+
+$('#btnStudentUpload').click(e =>{
+  var email = $('#emailStun').val()
+  var titlePost = $('#titleStu').val()
+  var txtContentPost =  CKEDITOR.instances['txtContentStu'].getData()
+  var textContentPost = CKEDITOR.instances['txtContentStu'].setData(txtContentPost)
+  console.log(txtContentPost)
+  console.log(textContentPost)
+  if(titlePost===''|| txtContentPost===''){
+      $('#error').removeAttr('style')
+      $('#error').val("Vui lòng nhập đầy đủ thông tin")
+  }else{ 
+      let dataPost ={
+          email: email,
+          titlePost:titlePost,
+          contextPost:txtContentPost,
+      }
+      console.log(dataPost)
+      fetch('/student/upload',{method:'POST',body: JSON.stringify(dataPost)})
+      .then(res=>res.json())
+      .then(json=>{
+        if(json.code===0){
+          email=''
+          titlePost=''
+          contextPost=''
+      //     socket.emit('notify',json.data)
+          $('#confirm-postStu-dialog').modal('hide')
+      //     window.reload()
+        }
+          else{
+            $('#error').removeAttr('style')
+            $('#error').text('')
+            $('#error').text("Đăng bài thất bại")
+          }
+      })
+      .catch(e=>console.log(e))
+    }
+})  
 
 function notifyOnline(s){
 $("#online-notification strong").html(s)
@@ -215,14 +258,13 @@ $(document).ready(()=>{
 // EDIT
 function onSignIn(googleUser) {
   var id_token = googleUser.getAuthResponse().id_token;
-  console.log(id_token)
   var xhr = new XMLHttpRequest();
   xhr.open('POST', '/loginGG');
   xhr.setRequestHeader('Content-Type', 'application/json');
   xhr.onload = function() {
       if (xhr.responseText == 'success') {
           signOut();
-          location.assign('/student')
+          location.assign('/stu')
       }
   };
   xhr.send(JSON.stringify({
@@ -288,3 +330,6 @@ var loadFile = function(event) {
   console.log(image.src)
 };
 // STUDENT POST STATUS
+
+
+CKEDITOR.replace('txtContentStu')
