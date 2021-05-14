@@ -1,7 +1,7 @@
 const { urlencoded } = require('express')
 const express = require('express')
 const {check, validationResult} = require('express-validator')
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs')
 const flash = require('express-flash')
 const session = require('express-session')
 const cookieParser = require('cookie-parser')
