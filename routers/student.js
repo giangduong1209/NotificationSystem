@@ -4,10 +4,11 @@ const parser = require('parser')
 const AccountStudent = require('../models/AccountStudentModel')
 const Notification = require('../models/NotificationModel')
 const ContentPost = require('../models/ContentModel')
-const { htmlToText } = require('html-to-text');
 const ObjectID = require('mongodb').ObjectID;
 const htmlToText = require('html-to-text')
 const app = express()
+const multer = require('multer')
+const upload = multer({dest: 'uploads'})
 app.set('view engine','ejs')
 Router.post('/update',(req,res)=>{
     let result=''
@@ -39,7 +40,7 @@ Router.post('/allStatus',(req,res)=>{
     })
     
 })
-Router.post('/upload',(req,res) =>{
+Router.post('/upload', (req,res) =>{
     let result=''
     req.on('data',d=>result+=d.toString())
     req.on('end',()=>{
