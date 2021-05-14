@@ -4,6 +4,7 @@ const parser = require('parser')
 const AccountStudent = require('../models/AccountStudentModel')
 const ContentPost = require('../models/ContentModel')
 const ObjectID = require('mongodb').ObjectID;
+const htmlToText = require('html-to-text')
 const app = express()
 app.set('view engine','ejs')
 Router.post('/update',(req,res)=>{
