@@ -115,6 +115,7 @@ $('#btnStudentUpload').click(e =>{
   var titlePost = $('#titleStu').val()
   var txtContentPost =  CKEDITOR.instances['txtContentStu'].getData()
   var textContentPost = txtContentPost.replace(/<[^>]*>?/gm, '')
+
   if(titlePost===''|| textContentPost===''){
       $('#error').removeAttr('style')
       $('#error').val("Vui lòng nhập đầy đủ thông tin")
