@@ -4,7 +4,7 @@ const parser = require('parser')
 const Notification = require('../models/NotificationModel')
 const ObjectID = require('mongodb').ObjectID;
 const AccountFaculty = require('../models/AccountFacultyModel')
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs')
 let name;
 Router.post('/thongbao',(req,res)=>{
     let {id} = req.body

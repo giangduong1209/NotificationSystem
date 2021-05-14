@@ -1,4 +1,3 @@
-
 let socket 
 
 let onlineUser=[]
@@ -28,7 +27,7 @@ let username
               name:$('#name').text()
           }
           // console.log(data)
-          fetch('http://localhost:8080/khoa/upload',{method:'POST',body: JSON.stringify(data)})
+          fetch('/khoa/upload',{method:'POST',body: JSON.stringify(data)})
           .then(res=>res.json())
           .then(json=>{
             if(json.code===0){
@@ -174,7 +173,7 @@ $(document).ready(()=>{
     let id =$(e.target).data('id');
     $('.btnEdit').attr('data-id',id)
     console.log(id)
-    fetch('http://localhost:8080/khoa/thongbao/',{
+    fetch('/khoa/thongbao/',{
       method:'POST',
       headers:{
         'Content-Type':'application/x-www-form-urlencoded'
@@ -212,7 +211,7 @@ $(document).ready(()=>{
       $('#errorE').removeAttr('style')
       $('#errorE').text("Vui lòng nhập đầy đủ thông tin")
     }else{
-      fetch('http://localhost:8080/khoa/thongbao/edit',{
+      fetch('/khoa/thongbao/edit',{
         method:'POST',
       body:JSON.stringify(data)
       })
@@ -239,7 +238,7 @@ $(document).ready(()=>{
     })
     $('#btn-delete-confirmed').click(e=>{
       let id = e.target.dataset.id
-      fetch('http://localhost:8080/khoa/thongbao/delete/'+id,{method:'POST'})
+      fetch('/khoa/thongbao/delete/'+id,{method:'POST'})
       .then(res=>res.json())
       .then(json => {
         if(json.code === 0){
@@ -302,7 +301,7 @@ if(oldPass==='' || newPass===''){
     oldPassword:oldPass,
     newPassword:newPass
   }
-  fetch('http://localhost:8080/khoa/EditPassword',{
+  fetch('localhost/khoa/EditPassword',{
     method:'POST',
     body:JSON.stringify(data)
   })
@@ -330,7 +329,7 @@ var loadFile = function(event) {
 	image.src = URL.createObjectURL(event.target.files[0]);
   console.log(image.src)
 };
-
+// STUDENT POST STATUS
 
 
 CKEDITOR.replace('txtContentStu')

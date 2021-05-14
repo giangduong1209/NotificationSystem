@@ -56,7 +56,7 @@ body{
     height: 100%;
     position: fixed;
     left: 0px;
-    background-color: #33485C;
+    background-color: #33485C !important;
     top: 0px;
     bottom: 0px;
 }
@@ -283,7 +283,7 @@ body{
     color: white;
 }
 .notification{
-    height: auto;
+    height: fit-content;
     margin-top: 10px;
     background-color: blue;
     border-radius: 10px;

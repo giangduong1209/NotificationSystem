@@ -1,7 +1,7 @@
 const { urlencoded } = require('express')
 const express = require('express')
 const {check, validationResult} = require('express-validator')
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs')
 const flash = require('express-flash')
 const session = require('express-session')
 const cookieParser = require('cookie-parser')
@@ -182,6 +182,23 @@ app.get('/stu',checkAuthentication, (req, res) =>{
             picture: user.picture
         })
         stu.save()
+        AccountStudent.findOneAndUpdate({email: user.email})
+        // AccountStudent.findOne({email: user.email})
+        // .then(acc =>{
+        //     if(!acc){
+        //         return res.json({code: 0, message: "Kkk"})
+        //     }
+        //     else{
+        //         id += acc._id
+        //         return id
+        //     }
+        // })
+
+        Notification.find()
+        .then(p=>{
+            return res.render(`studentInterface`, { user,notifications:p });
+        })
+       
 
         return res.redirect('student'); 
     }
