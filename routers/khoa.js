@@ -5,7 +5,20 @@ const Notification = require('../models/NotificationModel')
 const ObjectID = require('mongodb').ObjectID;
 const AccountFaculty = require('../models/AccountFacultyModel')
 const bcrypt = require('bcrypt')
-let name;
+
+Router.post('/allthongbao',(req,res)=>{
+   let {name}=req.body
+   console.log(typeof(name))
+   
+    Notification.find({faculity:name})
+    .then(p=>{
+        if(p){
+            res.json({code:0,message:'Thành công', data:p})
+        }else{
+            res.json({code:0,message:'Thất Bại'})
+        }
+    })
+})
 Router.post('/thongbao',(req,res)=>{
     let {id} = req.body
     console.log(id)

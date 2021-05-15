@@ -1,4 +1,3 @@
-const { urlencoded } = require('express')
 const express = require('express')
 const {check, validationResult} = require('express-validator')
 const bcrypt = require('bcryptjs')
@@ -13,6 +12,7 @@ const AccountAdmin = require('./models/AccountAdminModel')
 const Notification = require('./models/NotificationModel')
 const AccountStudent = require('./models/AccountStudentModel')
 const mongoose = require('mongoose')
+
 const app = express()
 const KhoaRouter = require('./routers/khoa')
 const StudentRouter = require('./routers/student')
@@ -25,11 +25,10 @@ app.use(bodyParser.urlencoded({extended: false}))
 app.use(express.json())
 app.use(express.static(__dirname + '/stylesheets'))
 app.use('/public',express.static('./public'))
-
+app.use(bodyParser.json())
 app.use(cookieParser('giangduong'))
 app.use(session({cookie: {maxAge: 60000}}))
 app.use(flash())
-
 app.use('/khoa',KhoaRouter)
 app.use('/student',StudentRouter)
 app.get('/', (req, res) =>{
@@ -39,11 +38,44 @@ app.get('/', (req, res) =>{
     res.render('LoginForm', {error, email, password})
 
 })
-
-
-
-app.get('/faculty', (req, res) =>{
-    res.render('facultyInterface')
+app.get('/newfeed', (req, res) =>{
+    if(!req.session.user){
+        return res.redirect('/')
+    }
+    let name = req.session.user
+    Notification.find({})
+    .then(p=>{
+        ContentPost.find({})
+        .then(c=>{
+            res.render('newfeed',{name:name,notifications:p, data:c})
+        })
+        
+    }) 
+})
+app.post('/checkemail',(req,res)=>{
+    let result=''
+    req.on('data',d=>result+=d.toString())
+    req.on('end',()=>{
+        let email = JSON.parse(result)
+        console.log(email)
+        AccountFaculty.findOne({email:email})
+        .then( p=>{
+            if(p){
+                res.json({code:0,message:'faculty'})
+            }else{
+                AccountStudent.findOne({email:email})
+                .then(s=>{
+                    if(s){
+                        res.json({code:0,message:'student'})
+                    }else{
+                        res.json({code:0,message:'admin'})
+                    }
+                })
+            }
+        })
+        
+    })
+    
 })
 const validatorlogin = [
 
@@ -62,13 +94,6 @@ app.get('/logout', (req, res) =>{
     res.redirect("/")
 })
 
-app.get('/thongbao',(req,res)=>{
-    // Notification.find()
-    // .then(p=>{
-    //     if(p)=>{}
-    // })
-    res.send('Trang thong bao')
-})
 app.get('/thongbao/:id',(req,res)=>{
     let id=(req.params)
     Notification.findOne({_id: ObjectID(id.id)})
@@ -168,8 +193,6 @@ app.post('/loginGG', (req, res) =>{
       })
       .catch(console.error);
 })
-
-
 app.get('/stu',checkAuthentication, (req, res) =>{
     let user = req.user;
     req.session.user = user.email
@@ -218,7 +241,7 @@ app.get('/logout',(req,res)=>{
     res.redirect('/')
 })
 app.get('/allthongbao/:page',(req,res)=>{
-    let perPage = 5; // số lượng sản phẩm xuất hiện trên 1 page
+    let perPage = 10; // số lượng sản phẩm xuất hiện trên 1 page
     let page = req.params.page || 1; 
     Notification
       .find() // find tất cả các data
@@ -330,6 +353,10 @@ mongoose.connect('mongodb://localhost/accountfaculty', {
                 console.log(n)
                 client.broadcast.emit('alertNoti',{message:`Có thông báo mới:<a href="/thongbao/${n}">Xem chi tiết</a>`})
             })
+            client.on('new-post',(data)=>{
+                console.log(data)
+                client.broadcast.emit("new-post",data)
+            })
             client.on('regiter-nameUser', username=>{
                 client.username = username
                 client.broadcast.emit("register-name",{id:client.id, username: username})
@@ -342,3 +369,4 @@ mongoose.connect('mongodb://localhost/accountfaculty', {
 })
 .catch(e => console.log('Không thể kết nối đến database: ' +e.message))
 
+//CHECK EMAIL

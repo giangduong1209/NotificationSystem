@@ -46,8 +46,10 @@ Router.post('/upload',(req,res) =>{
         dataPost = JSON.parse(result)
         console.log(dataPost)
         let contPost = new ContentPost({
+            name:dataPost.name,
             email: dataPost.email,
             titlePost: dataPost.titlePost,
+            datePost:dataPost.datePost,
             contextPost: htmlToText(dataPost.contextPost),
         })
         contPost.save()
