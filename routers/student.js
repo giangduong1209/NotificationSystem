@@ -79,7 +79,8 @@ Router.post('/upload',(req,res) =>{
     req.on('data',d=>result+=d.toString())
     req.on('end',()=>{
         dataPost = JSON.parse(result)
-        console.log(dataPost)
+
+        var encodeText = htmlToText(dataPost.contextPost)
         let contPost = new ContentPost({
             name:dataPost.name,
             email: dataPost.email,

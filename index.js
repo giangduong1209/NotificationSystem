@@ -21,6 +21,8 @@ const {OAuth2Client} = require('google-auth-library');
 const ContentPost = require('./models/ContentModel')
 const CLIENT_ID = '192862003971-e3ne3er14ijgit447n760d6vsbcrq6g2.apps.googleusercontent.com'
 const client = new OAuth2Client(CLIENT_ID);
+const multer = require('multer')
+const upload = multer({dest: 'uploads'})
 app.set('view engine','ejs')
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(express.json())
@@ -362,6 +364,12 @@ app.post('/admin/create_account', validatorRegis, (req, res) =>{
     res.redirect('/admin')
    
 })
+
+app.get('/student/allpost',(req, res) =>{
+    res.render('allPostContent')
+})
+
+
 
 function checkAuthentication(req, res, next){
     let token = req.cookies['session-token'];
