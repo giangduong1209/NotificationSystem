@@ -5,10 +5,8 @@ const AccountStudent = require('../models/AccountStudentModel')
 const Notification = require('../models/NotificationModel')
 const ContentPost = require('../models/ContentModel')
 const ObjectID = require('mongodb').ObjectID;
-const htmlToText = require('html-to-text')
+const {htmlToText} = require('html-to-text')
 const app = express()
-const multer = require('multer')
-const upload = multer({dest: 'uploads'})
 app.set('view engine','ejs')
 Router.post('/update',(req,res)=>{
     let result=''
@@ -45,11 +43,12 @@ Router.post('/upload', (req,res) =>{
     req.on('data',d=>result+=d.toString())
     req.on('end',()=>{
         dataPost = JSON.parse(result)
-        console.log(dataPost)
+
+        var encodeText = htmlToText(dataPost.contextPost)
         let contPost = new ContentPost({
             email: dataPost.email,
             titlePost: dataPost.titlePost,
-            contextPost: htmlToText(dataPost.contextPost),
+            contextPost: encodeText
         })
         contPost.save()
         res.json({code:0,message:'Khong loi',dataPost:contPost._id})
