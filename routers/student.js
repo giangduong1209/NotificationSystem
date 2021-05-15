@@ -4,9 +4,8 @@ const parser = require('parser')
 const AccountStudent = require('../models/AccountStudentModel')
 const Notification = require('../models/NotificationModel')
 const ContentPost = require('../models/ContentModel')
-const { htmlToText } = require('html-to-text');
 const ObjectID = require('mongodb').ObjectID;
-const htmlToText = require('html-to-text')
+const {htmlToText} = require('html-to-text')
 const app = express()
 app.set('view engine','ejs')
 Router.post('/update',(req,res)=>{
@@ -39,18 +38,20 @@ Router.post('/allStatus',(req,res)=>{
     })
     
 })
-Router.post('/upload',(req,res) =>{
+Router.post('/upload', (req,res) =>{
     let result=''
     req.on('data',d=>result+=d.toString())
     req.on('end',()=>{
         dataPost = JSON.parse(result)
-        console.log(dataPost)
+
+        var encodeText = htmlToText(dataPost.contextPost)
         let contPost = new ContentPost({
             name:dataPost.name,
             email: dataPost.email,
             titlePost: dataPost.titlePost,
             datePost:dataPost.datePost,
             contextPost: htmlToText(dataPost.contextPost),
+
         })
         contPost.save()
         res.json({code:0,message:'Khong loi',dataPost:contPost._id})

@@ -291,7 +291,9 @@ body{
 .sidebar #update{
     color: white;
 }
-
+.sidebar #seenPost{
+    color: white;
+}
 
 .contentBox{
     margin-top: 10px;
