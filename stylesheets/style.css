@@ -88,10 +88,6 @@ ul li:hover a{
     transition: cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 
-.box-header{
-    
-}
-
 .dropdown span {
     font-size: 20px;
     margin-top: 10px;
@@ -291,8 +287,6 @@ body{
 .sidebar #update{
     color: white;
 }
-
-
 .contentBox{
     margin-top: 10px;
     background-color: white;
@@ -302,3 +296,19 @@ body{
     width: 200px;
 }
 
+.detail{
+    width:100%;
+    height: 100%;
+    margin-top: 10px;
+    background-color: white;
+}
+
+/* COMMENT */
+.panel{
+    margin-top:10px;
+    border: 1px solid blue;
+}
+.comment{
+    margin-top:10px;
+    display: flex;
+}

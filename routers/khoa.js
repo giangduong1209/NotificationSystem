@@ -99,7 +99,6 @@ Router.get('/',(req,res)=>{
     else if(req.session.user === "admin"){
         return res.redirect('/admin')
     }
-    console.log(req.session.user)
     let data = {
         "CTHSSV":"Phòng Công tác học sinh, sinh viên",
         "PDH":"Phòng Đại học",
@@ -153,7 +152,7 @@ Router.post('/upload',(req,res)=>{
             faculity:data.name
         })
         noti.save()
-        res.json({code:0,message:'Khong loi',data:noti._id})
+        res.json({code:0,message:'Khong loi',data:noti._id,title:title})
     })
     console.log('da nhan anh')
     

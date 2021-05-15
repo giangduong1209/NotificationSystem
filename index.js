@@ -11,6 +11,7 @@ const AccountFaculty = require('./models/AccountFacultyModel')
 const AccountAdmin = require('./models/AccountAdminModel')
 const Notification = require('./models/NotificationModel')
 const AccountStudent = require('./models/AccountStudentModel')
+const Comment = require('./models/CommentModel')
 const mongoose = require('mongoose')
 
 const app = express()
@@ -24,7 +25,7 @@ app.set('view engine','ejs')
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(express.json())
 app.use(express.static(__dirname + '/stylesheets'))
-app.use('/public',express.static('./public'))
+app.use('/static',express.static('./static'))
 app.use(bodyParser.json())
 app.use(cookieParser('giangduong'))
 app.use(session({cookie: {maxAge: 60000}}))
@@ -36,21 +37,80 @@ app.get('/', (req, res) =>{
     const email = req.flash('email') || ''
     const password = req.flash('password') || ''
     res.render('LoginForm', {error, email, password})
-
 })
 app.get('/newfeed', (req, res) =>{
     if(!req.session.user){
         return res.redirect('/')
     }
     let name = req.session.user
+    
     Notification.find({})
     .then(p=>{
         ContentPost.find({})
         .then(c=>{
-            res.render('newfeed',{name:name,notifications:p, data:c})
+                res.render('newfeed',{name:name,notifications:p, data:c})       
+        })
+    }) 
+})
+
+app.get('/posts/:id',(req,res)=>{
+    let {id} = req.params
+    ContentPost.findById({_id:ObjectID(id)})
+    .then(content=>{
+        Comment.find({idPost:id})
+        .then(c=>{
+            if(!c){
+                console.log('Không có bình luận')
+                return  res.render('postDetail',{name:req.session.user,data:content,comment:''})
+            }
+            console.log(c)
+            return res.render('postDetail',{name:req.session.user,data:content,comment:c})
         })
         
-    }) 
+    })
+   
+})
+app.post('/do-comment',(req,res)=>{
+    let result=''
+    req.on('data',d=>result+=d.toString())
+    req.on('end',()=>{
+        let data = JSON.parse(result)
+        let name = data.name.trim()
+        var d = new Date();
+        var n = d.toLocaleString();
+        AccountFaculty.findOne({email:name})
+        .then(p=>{
+            if(p){
+                var comment = new Comment({
+                    email: name,
+                    name:p.name,
+                    contextPost: data.comment,
+                    datePost:n,
+                    idPost:data.idPost
+                })
+                comment.save()
+                return res.json({code:0,message:"Comment thành công",comment:comment})
+            }else{
+                AccountStudent.findOne({email:name})
+                .then(s=>{
+                    if(s){
+                        var comment = new Comment({
+                            email: name,
+                            name:s.name,
+                            contextPost: data.comment,
+                            datePost:n,
+                            idPost:data.idPost
+                        })
+                        comment.save()
+                        return res.json({code:0,message:"Comment thành công",comment:comment})
+                    }else{
+                        return res.json({code:1,message:"Comment thất bại"})
+                    }
+                })
+            }
+        })
+    })
+    
 })
 app.post('/checkemail',(req,res)=>{
     let result=''
@@ -93,7 +153,6 @@ app.get('/logout', (req, res) =>{
     res.clearCookie('session-token')
     res.redirect("/")
 })
-
 app.get('/thongbao/:id',(req,res)=>{
     let id=(req.params)
     Notification.findOne({_id: ObjectID(id.id)})
@@ -125,6 +184,7 @@ app.post('/', validatorlogin, (req, res) =>{
         let account = undefined
         if(email === "admin@gmail.com" && password==="123456"){
             req.session.user='admin'
+            let name= req.session.user
             return res.redirect('/admin')
         }    
         else{
@@ -145,7 +205,7 @@ app.post('/', validatorlogin, (req, res) =>{
                             delete p.password
                             req.session.user = p.email
                             console.log("Gia tri session: ",req.session.user)
-                            return res.redirect('/khoa')
+                            return res.redirect('/newfeed')
                         }
                     })
                 }
@@ -206,7 +266,7 @@ app.get('/stu',checkAuthentication, (req, res) =>{
         })
         stu.save()
 
-        return res.redirect('student'); 
+        return res.redirect('/newfeed'); 
     }
     else {
         return res.redirect('/')
@@ -344,8 +404,7 @@ mongoose.connect('mongodb://localhost/accountfaculty', {
             let users= Array.from(io.sockets.sockets.values()).map(socket=>({id:socket.id, username: socket.username, free: socket.loginAt, free:socket.free}))
             console.log(users)
             client.on('disconnect',()=>{
-                console.log(`${client.id} has left`)
-                
+                console.log(`${client.id} has left`)  
                 client.broadcast.emit('user-leave', client.id)
                  }
             )
@@ -354,17 +413,11 @@ mongoose.connect('mongodb://localhost/accountfaculty', {
                 client.broadcast.emit('alertNoti',{message:`Có thông báo mới:<a href="/thongbao/${n}">Xem chi tiết</a>`})
             })
             client.on('new-post',(data)=>{
-                console.log(data)
                 client.broadcast.emit("new-post",data)
             })
-            client.on('regiter-nameUser', username=>{
-                client.username = username
-                client.broadcast.emit("register-name",{id:client.id, username: username})
+            client.on("new-comment", data=>{
+                io.emit("new-comment",data)
             })
-            client.send(" this  is messsage from server")
-           
-            client.emit('list-users',users)
-            client.broadcast.emit('new-user',{id: client.id, username: client.name, free: client.free, loginAt: client.loginAt})
         })
 })
 .catch(e => console.log('Không thể kết nối đến database: ' +e.message))

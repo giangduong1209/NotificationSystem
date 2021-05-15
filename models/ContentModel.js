@@ -5,7 +5,8 @@ const ContentPostSchema = new Schema({
     name:String,
     titlePost: String,
     contextPost: String,
-    datePost:Date
+    datePost:Date,
+    image:String,
 })
 
 module.exports = mongoose.model('ContentPost', ContentPostSchema)
