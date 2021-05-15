@@ -143,12 +143,10 @@ $('#btnStudentUpload').click(e =>{
           email: email,
           name:name,
           titlePost:titlePost,
-<<<<<<< Updated upstream
           contextPost:textContentPost,
-=======
           datePost:timestamp,
           contextPost:txtContentPost,
->>>>>>> Stashed changes
+
       }
       fetch('/student/upload',{method:'POST' ,body: JSON.stringify(dataPost)})
       .then(res=>res.json())
