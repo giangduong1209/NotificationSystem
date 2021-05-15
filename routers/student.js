@@ -46,9 +46,12 @@ Router.post('/upload', (req,res) =>{
 
         var encodeText = htmlToText(dataPost.contextPost)
         let contPost = new ContentPost({
+            name:dataPost.name,
             email: dataPost.email,
             titlePost: dataPost.titlePost,
-            contextPost: encodeText
+            datePost:dataPost.datePost,
+            contextPost: htmlToText(dataPost.contextPost),
+
         })
         contPost.save()
         res.json({code:0,message:'Khong loi',dataPost:contPost._id})
